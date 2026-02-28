@@ -1,0 +1,28 @@
+﻿[33mΓ¥»[39m Building...
+[32mΓ£ö[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m                 [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mchunk-RFSMYSLY.js[39m  [2m | [22m[2m-[22m                     [2m | [22m[36m251.64 kB[39m[2m | [22m               [36m69.04 kB[39m
+[32mstyles-BMHNSYIJ.css[39m[2m | [22m[2mstyles[22m                [2m | [22m [36m25.61 kB[39m[2m | [22m                [36m2.42 kB[39m
+[32mmain-Q4P6YPIG.js[39m   [2m | [22m[2mmain[22m                  [2m | [22m [36m20.04 kB[39m[2m | [22m                [36m4.55 kB[39m
+[32mchunk-QUEOKRCJ.js[39m  [2m | [22m[2m-[22m                     [2m | [22m  [36m3.81 kB[39m[2m | [22m                [36m1.03 kB[39m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m         [2m | [22m[1m301.10 kB[22m[2m | [22m               [1m77.05 kB[22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m                 [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mchunk-SHMZBWUF.js[39m  [2m | [22m[2m-[22m                     [2m | [22m [36m35.53 kB[39m[2m | [22m                [36m7.51 kB[39m
+[32mchunk-3JJOBQGY.js[39m  [2m | [22m[2madmin[22m                 [2m | [22m [36m35.06 kB[39m[2m | [22m                [36m8.15 kB[39m
+[32mchunk-JJ65G6PN.js[39m  [2m | [22m[2mregister-provider[22m     [2m | [22m [36m26.49 kB[39m[2m | [22m                [36m6.30 kB[39m
+[32mchunk-OBQKZY32.js[39m  [2m | [22m[2mprovider-dashboard[22m    [2m | [22m [36m25.17 kB[39m[2m | [22m                [36m6.27 kB[39m
+[32mchunk-LRJNZZCE.js[39m  [2m | [22m[2mlanding[22m               [2m | [22m [36m22.55 kB[39m[2m | [22m                [36m6.05 kB[39m
+[32mchunk-L2QHDSEO.js[39m  [2m | [22m[2mservices[22m              [2m | [22m [36m15.89 kB[39m[2m | [22m                [36m4.04 kB[39m
+[32mchunk-RC4AKIMH.js[39m  [2m | [22m[2mbook-service[22m          [2m | [22m [36m15.76 kB[39m[2m | [22m                [36m4.08 kB[39m
+[32mchunk-NWI7HQJZ.js[39m  [2m | [22m[2mcustomer-bookings[22m     [2m | [22m [36m14.88 kB[39m[2m | [22m                [36m4.08 kB[39m
+[32mchunk-PDYH5VE3.js[39m  [2m | [22m[2mregister-customer[22m     [2m | [22m [36m14.69 kB[39m[2m | [22m                [36m4.07 kB[39m
+[32mchunk-VGTCE6XQ.js[39m  [2m | [22m[2mlogin[22m                 [2m | [22m [36m13.81 kB[39m[2m | [22m                [36m3.38 kB[39m
+[32mchunk-ZAGVF6CL.js[39m  [2m | [22m[2mprovider-notifications[22m[2m | [22m [36m12.59 kB[39m[2m | [22m                [36m3.53 kB[39m
+[32mchunk-JVHNKPSE.js[39m  [2m | [22m[2mbooking-confirmed[22m     [2m | [22m [36m10.11 kB[39m[2m | [22m                [36m2.71 kB[39m
+[32mchunk-W6QOJ5AT.js[39m  [2m | [22m[2mregister[22m              [2m | [22m  [36m4.98 kB[39m[2m | [22m                [36m1.49 kB[39m
+[32mchunk-KQZ5IK7N.js[39m  [2m | [22m[2mregistration-success[22m  [2m | [22m  [36m4.91 kB[39m[2m | [22m                [36m1.50 kB[39m
+
+Application bundle generation failed. [3.440 seconds] - 2026-02-26T05:15:22.757Z
+

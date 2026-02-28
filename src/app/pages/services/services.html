@@ -1,0 +1,163 @@
+<div class="services-page">
+  <!-- Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1 class="page-title">Find <span>Service Providers</span></h1>
+      <p class="page-subtitle">Browse verified professionals in Tiruchirappalli</p>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section class="filters-section">
+    <div class="container">
+      <div class="filters-bar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search providers..." [(ngModel)]="searchQuery"
+            (ngModelChange)="onFilterChange()" class="filter-search">
+          </div>
+          <div class="area-wrap">
+            <span class="area-icon">📍</span>
+            <select [(ngModel)]="selectedArea" (change)="onFilterChange()" class="filter-area">
+              @for (area of areas; track area) {
+                <option [value]="area">{{ area }}</option>
+              }
+            </select>
+          </div>
+          <label class="emergency-toggle">
+            <span class="toggle-label">Emergency Only</span>
+            <div class="toggle-switch" [class.active]="emergencyOnly"
+              (click)="emergencyOnly = !emergencyOnly; onFilterChange()">
+              <div class="toggle-thumb"></div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+          @for (cat of categories; track cat) {
+            <button class="cat-tab" [class.active]="activeCategory === cat.name"
+              (click)="setCategory(cat.name)">
+              <span class="cat-icon">
+                @switch (cat.icon) {
+                  @case ('zap') {
+                    <i>⚡</i>
+                  }
+                  @case ('wrench') {
+                    <i>🔧</i>
+                  }
+                  @case ('snowflake') {
+                    <i>❄️</i>
+                  }
+                  @case ('plug') {
+                    <i>🔌</i>
+                  }
+                  @case ('palette') {
+                    <i>🎨</i>
+                  }
+                  @case ('hammer') {
+                    <i>🪚</i>
+                  }
+                  @case ('grid') {
+                    <i>☰</i>
+                  }
+                  @default {
+                    <i>{{ cat.icon }}</i>
+                  }
+                }
+              </span>
+              {{ cat.name }}
+            </button>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="results-section">
+      <div class="container">
+        <div class="results-header">
+          @if (!loading) {
+            <span class="results-count">{{ providers.length }} providers found</span>
+          }
+          @if (loading) {
+            <span class="results-count">Finding providers...</span>
+          }
+          <select [(ngModel)]="sortBy" (change)="onFilterChange()" class="sort-select">
+            <option value="rating">Top Rated</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+          </select>
+        </div>
+
+        @if (loading) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Curating best professionals for you...</p>
+          </div>
+        }
+
+        @if (!loading) {
+          <div class="providers-grid">
+            @for (provider of providers; track provider) {
+              <div class="provider-card">
+                <div class="provider-header">
+                  <div class="provider-avatar" [style.background]="'var(--gradient-orange)'">
+                    {{ provider.initial || provider.name.charAt(0) }}
+                  </div>
+                  <div class="provider-info">
+                    <h3 class="provider-name">{{ provider.name }}</h3>
+                    <span class="provider-category">{{ provider.category }}</span>
+                    <div class="provider-meta">
+                      <span>📍 {{ provider.area }}</span>
+                      <span>⏱ {{ provider.experience }} yrs</span>
+                      @if (provider.verified) {
+                        <span class="verified-tick">✅ Verified</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="provider-rating">
+                    <span class="rating-star">⭐</span>
+                    <span class="rating-value">{{ provider.rating }}</span>
+                    <span class="rating-count">({{ provider.reviews }})</span>
+                  </div>
+                </div>
+                <div class="provider-footer">
+                  <div class="provider-price">
+                    <span class="price-value">₹{{ provider.price }}</span>
+                    <span class="price-unit">{{ provider.priceUnit }}</span>
+                  </div>
+                  <div class="provider-tags">
+                    @if (provider.emergency) {
+                      <span class="badge badge-emergency">Emergency</span>
+                    }
+                    @if (provider.available) {
+                      <span class="badge badge-available">Available</span>
+                    }
+                    @if (!provider.available) {
+                      <span class="badge badge-busy">Busy</span>
+                    }
+                  </div>
+                  <div class="provider-actions">
+                    <a [routerLink]="['/book', provider.id]" class="btn btn-primary btn-sm"
+                    style="width: 100%; text-align: center;">Book Now</a>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (!loading && providers.length === 0) {
+          <div class="no-results fadeIn">
+            <span class="no-icon">🔍</span>
+            <h3>No providers found</h3>
+            <p>Try adjusting your category or area filters to see more results.</p>
+            <button class="btn btn-outline"
+              (click)="activeCategory = 'All Services'; selectedArea = 'All Areas'; onFilterChange()">Clear All
+            Filters</button>
+          </div>
+        }
+      </div>
+    </section>
+  </div>

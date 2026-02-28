@@ -1,0 +1,133 @@
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="nav-container">
+    <a routerLink="/" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.5 2L3.5 14H12.5L11.5 22L21.5 10H12.5L13.5 2Z" fill="white" />
+        </svg>
+      </div>
+      <span class="logo-text">Trichy<span class="logo-accent">Fix</span></span>
+    </a>
+
+    <ul class="nav-links" [class.mobile-open]="mobileMenuOpen">
+      <!-- Public Links -->
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+      (click)="closeMobile()">Home</a></li>
+      <li><a routerLink="/services" routerLinkActive="active" (click)="closeMobile()">Services</a></li>
+
+      <!-- Customer-only Links -->
+      @if (auth.isCustomer()) {
+        <li>
+          <a routerLink="/services" (click)="closeMobile()">Book Service</a>
+        </li>
+      }
+      @if (auth.isCustomer()) {
+        <li>
+          <a routerLink="/my-bookings" routerLinkActive="active" (click)="closeMobile()">My Bookings</a>
+        </li>
+      }
+
+      <!-- Provider-only Links -->
+      @if (auth.isProvider()) {
+        <li>
+          <a routerLink="/provider/dashboard" routerLinkActive="active" (click)="closeMobile()">Dashboard</a>
+        </li>
+      }
+      @if (auth.isProvider()) {
+        <li>
+          <a routerLink="/provider/notifications" routerLinkActive="active" (click)="closeMobile()">Notifications</a>
+        </li>
+      }
+
+      <!-- Admin-only Links -->
+      @if (auth.isAdmin()) {
+        <li>
+          <a routerLink="/admin" routerLinkActive="active" (click)="closeMobile()">Admin Panel</a>
+        </li>
+      }
+      @if (auth.isAdmin()) {
+        <li>
+          <a routerLink="/admin/verification" routerLinkActive="active" (click)="closeMobile()">Verification</a>
+        </li>
+      }
+
+      <!-- Guest-only Links -->
+      @if (!auth.isLoggedIn()) {
+        <li>
+          <a routerLink="/" fragment="for-providers" (click)="closeMobile()">For Providers</a>
+        </li>
+      }
+      @if (!auth.isLoggedIn()) {
+        <li>
+          <a routerLink="/" fragment="about" (click)="closeMobile()">About</a>
+        </li>
+      }
+
+      <!-- Mobile-only auth actions -->
+      @if (auth.isLoggedIn()) {
+        <li class="mobile-only">
+          <a (click)="logout()" class="mobile-logout">Logout</a>
+        </li>
+      }
+    </ul>
+
+    <div class="nav-actions">
+      <!-- Not logged in -->
+      @if (!auth.isLoggedIn()) {
+        <a routerLink="/login" class="nav-login">Login</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm nav-cta">Get Started</a>
+      }
+
+      <!-- Logged in — user dropdown -->
+      @if (auth.isLoggedIn()) {
+        <div class="user-dropdown">
+          <button class="user-btn" (click)="toggleUserMenu()">
+            <div class="user-avatar-sm">{{ auth.userInitial() }}</div>
+            <span class="user-name-text">{{ auth.userName() }}</span>
+            <span class="dropdown-arrow" [class.open]="showUserMenu">▾</span>
+          </button>
+          @if (showUserMenu) {
+            <div class="dropdown-menu">
+              <div class="dropdown-header">
+                <strong>{{ auth.userName() }}</strong>
+                <span class="dropdown-role">{{ auth.userRole() }}</span>
+              </div>
+              <div class="dropdown-divider"></div>
+              <!-- Customer menu items -->
+              @if (auth.isCustomer()) {
+                <a routerLink="/services" (click)="showUserMenu = false" class="dropdown-item">🔍
+                Browse Services</a>
+              }
+              <!-- Provider menu items -->
+              @if (auth.isProvider()) {
+                <a routerLink="/provider/dashboard" (click)="showUserMenu = false"
+                class="dropdown-item">📊 Dashboard</a>
+              }
+              @if (auth.isProvider()) {
+                <a routerLink="/provider/notifications" (click)="showUserMenu = false"
+                class="dropdown-item">🔔 Notifications</a>
+              }
+              <!-- Admin menu items -->
+              @if (auth.isAdmin()) {
+                <a routerLink="/admin" (click)="showUserMenu = false" class="dropdown-item">🛡️ Admin
+                Panel</a>
+              }
+              @if (auth.isAdmin()) {
+                <a routerLink="/admin/verification" (click)="showUserMenu = false"
+                class="dropdown-item">✅ Verification</a>
+              }
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item logout-item" (click)="logout()">🚪 Logout</button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <button class="mobile-toggle" (click)="toggleMobile()" [attr.aria-label]="'Toggle menu'">
+      <span [class.open]="mobileMenuOpen"></span>
+      <span [class.open]="mobileMenuOpen"></span>
+      <span [class.open]="mobileMenuOpen"></span>
+    </button>
+  </div>
+</nav>

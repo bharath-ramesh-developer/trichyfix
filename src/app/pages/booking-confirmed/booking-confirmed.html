@@ -1,0 +1,122 @@
+<div class="confirmed-page">
+  <!-- Navbar -->
+  <nav class="conf-nav">
+    <a routerLink="/" class="nav-logo">
+      <div class="logo-icon">⚡</div>
+      <span class="logo-text">Trichy<span class="accent">Fix</span></span>
+    </a>
+    <div class="nav-links">
+      <a routerLink="/services">Services</a>
+      <a routerLink="/">How it Works</a>
+      <a routerLink="/">For Providers</a>
+      <a routerLink="/">About</a>
+    </div>
+    <div class="nav-actions">
+      <a routerLink="/login" class="nav-link">Login</a>
+      <a routerLink="/register" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Success Content -->
+  <div class="confirmed-content">
+    <div class="success-icon">
+      <div class="check-circle">✓</div>
+    </div>
+
+    <h1 class="confirmed-title">Booking Confirmed!</h1>
+    <p class="confirmed-subtitle">
+      Your booking with <strong>{{ booking?.providerName }}</strong> has been confirmed.<br>
+      They will contact you shortly to confirm.
+    </p>
+
+    <!-- Booking Info Card -->
+    @if (booking) {
+      <div class="booking-info-card">
+        <div class="info-row">
+          <span class="info-label">Provider</span>
+          <span class="info-value"><strong>{{ booking.providerName }}</strong></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Service</span>
+          <span class="info-value">{{ booking.providerCategory }}</span>
+        </div>
+        @if (booking.providerPhone) {
+          <div class="info-row">
+            <span class="info-label">Contact</span>
+            <span class="info-value">
+              <a [href]="'tel:' + booking.providerPhone"
+                style="color: var(--primary-orange); text-decoration: none; font-weight: 700;">📞 {{
+              booking.providerPhone }}</a>
+            </span>
+          </div>
+        }
+        @if (booking.date) {
+          <div class="info-row">
+            <span class="info-label">Date</span>
+            <span class="info-value">{{ booking.date }}</span>
+          </div>
+        }
+        @if (booking.time) {
+          <div class="info-row">
+            <span class="info-label">Time</span>
+            <span class="info-value">{{ booking.time }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    <div class="confirmed-actions">
+      <a routerLink="/services" class="btn btn-outline">Browse More</a>
+      <a routerLink="/my-bookings" class="btn btn-primary">Track My Bookings</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="conf-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="logo-icon-sm">⚡</div>
+          <span class="logo-text-sm">Trichy<span class="accent">Fix</span></span>
+        </div>
+        <p class="footer-desc">Tiruchirappalli's trusted platform for home services. Verified professionals at
+        your doorstep.</p>
+      </div>
+      <div class="footer-links-group">
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="#">Electrician</a>
+          <a href="#">Plumber</a>
+          <a href="#">AC Repair</a>
+          <a href="#">Carpentry</a>
+          <a href="#">Painting</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About us</a>
+          <a href="#">Careers</a>
+          <a href="#">Contact</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Safety</a>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TrichyFix • Made with ❤️ in Tiruchirappalli</span>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" [class.show]="showToast">
+    <span class="toast-icon">✅</span>
+    <div class="toast-content">
+      <strong>Booking confirmed!</strong> Provider will contact you shortly.
+    </div>
+  </div>
+</div>

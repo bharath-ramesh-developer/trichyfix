@@ -1,0 +1,235 @@
+<!-- ===== HERO SECTION ===== -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-container">
+    <div class="hero-content">
+      <div class="hero-badge">🏠 Tiruchirappalli's #1 Home Services Platform</div>
+      <h1 class="hero-title">
+        Trusted Home<br>
+        <span>Services</span> at Your<br>
+        Doorstep
+      </h1>
+      <p class="hero-subtitle">
+        Find verified electricians, plumbers, and AC mechanics in Trichy. Book in seconds, get instant service.
+      </p>
+
+      <div class="hero-search">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="What service do you need?" [(ngModel)]="searchQuery"
+            class="search-input">
+          </div>
+          <div class="search-area-wrap">
+            <span class="area-icon">📍</span>
+            <select [(ngModel)]="selectedArea" class="search-area">
+              <option value="">Your area...</option>
+              @for (area of areas; track area) {
+                <option [value]="area">{{ area }}</option>
+              }
+            </select>
+          </div>
+          <button (click)="onSearch()" class="btn btn-primary search-btn">Search</button>
+        </div>
+
+        <div class="hero-stats">
+          @for (stat of stats; track stat) {
+            <div class="stat-item">
+              <span class="stat-value">{{ stat.value }}</span>
+              <span class="stat-label">{{ stat.label }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <div class="hero-image-wrapper">
+          <div class="hero-illustration">
+            <div class="hero-person">
+              <div class="person-body">
+                <div class="hard-hat">🧢</div>
+                <div class="face">😊</div>
+                <div class="tool-belt">🔧</div>
+              </div>
+            </div>
+            <div class="hero-floating-card card-1">
+              <span class="floating-icon">⚡</span>
+              <span>Quick Response</span>
+            </div>
+            <div class="hero-floating-card card-2">
+              <span class="floating-icon">✅</span>
+              <span>Verified Pros</span>
+            </div>
+            <div class="hero-floating-card card-3">
+              <span class="floating-icon">⭐</span>
+              <span>4.8 Rating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICES SECTION ===== -->
+  <section class="services-section anim-section" id="services" #animSection>
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">OUR SERVICES</span>
+        <h2 class="section-title">What Do You Need <span>Fixed</span>?</h2>
+        <p class="section-subtitle">Choose from our wide range of verified home services across Tiruchirappalli</p>
+      </div>
+
+      <div class="services-grid">
+        @for (service of services; track service) {
+          <a routerLink="/services" [queryParams]="{category: service.category}"
+            class="service-card">
+            <div class="service-icon" [style.background]="service.color">
+              @if (service.name === 'Electrician') {
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              }
+              @if (service.name === 'Plumber') {
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+              }
+              @if (service.name === 'AC Repair') {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2">
+                  </path>
+                </svg>
+              }
+              @if (service.name === 'Appliance Repair') {
+                <svg width="22" height="22" viewBox="0 0 24 24"
+                  fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
+                  </path>
+                </svg>
+              }
+              @if (service.name === 'Painting') {
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M19.11 7.25L14.16 2.3c-.38-.4-1.01-.4-1.4 0l-10.4 10.4c-.4.39-.4 1.02 0 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l10.4-10.4c.39-.38.39-1.01 0-1.4zm-14.2 10.4l-3.2-3.2 8-8 3.2 3.2-8 8z">
+                  </path>
+                </svg>
+              }
+              @if (service.name === 'Carpentry') {
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 22l6-6m0 0l-3-3-6 6 3 3 6-6zm6-6l4-4 8 8-4 4-8-8z"></path>
+                </svg>
+              }
+            </div>
+            <h3 class="service-name">{{ service.name }}</h3>
+            <span class="service-tamil">{{ service.tamil }}</span>
+            <p class="service-desc">{{ service.desc }}</p>
+            <span class="service-jobs">
+              {{ service.jobs }}
+            </span>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="how-section anim-section" id="how-it-works" #animSection>
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">HOW IT WORKS</span>
+        <h2 class="section-title">Book in <span>4 Easy Steps</span></h2>
+      </div>
+
+      <div class="steps-grid">
+        @for (step of steps; track step; let i = $index) {
+          <div class="step-card">
+            <div class="step-icon-wrap" [style.background]="step.color + '15'">
+              <span class="step-icon" [style.color]="step.color">{{ step.icon }}</span>
+            </div>
+            <span class="step-num" [style.color]="step.color">{{ step.num }}</span>
+            <h3 class="step-title">{{ step.title }}</h3>
+            <p class="step-desc">{{ step.desc }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials-section anim-section" #animSection>
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">TESTIMONIALS</span>
+        <h2 class="section-title">Loved by <span>Trichy Residents</span></h2>
+      </div>
+
+      <div class="testimonials-grid">
+        @for (t of testimonials; track t) {
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              @for (star of [1,2,3,4,5]; track star) {
+                <span class="star">⭐</span>
+              }
+            </div>
+            <p class="testimonial-text">{{ t.text }}</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" [style.background]="'var(--gradient-orange)'">
+                {{ t.name.charAt(0) }}
+              </div>
+              <div>
+                <span class="author-name">{{ t.name }}</span>
+                <span class="author-area">📍 {{ t.area }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOR PROVIDERS CTA ===== -->
+  <section class="providers-cta anim-section" id="for-providers" #animSection>
+    <div class="container">
+      <div class="cta-content">
+        <div class="cta-text">
+          <span class="section-label" style="color: var(--primary-orange);">FOR SERVICE PROVIDERS</span>
+          <h2 class="cta-title">Join Trichy's Fastest<br>Growing <span>Service Network</span></h2>
+          <p class="cta-desc">Register as a provider, get verified, and start receiving bookings from customers in
+          your area. Free to join!</p>
+          <ul class="cta-benefits">
+            <li>✅ Get job leads from 10K+ customers</li>
+            <li>✅ Earn ₹25,000–₹80,000/month</li>
+            <li>✅ Grow your business with ratings</li>
+          </ul>
+          @switch (auth.userRole()) {
+            @case ('provider') {
+              <a routerLink="/provider/dashboard" class="btn btn-primary btn-lg">Go to
+              Dashboard →</a>
+            }
+            @case ('admin') {
+              <a routerLink="/admin" class="btn btn-primary btn-lg">Admin Panel →</a>
+            }
+            @default {
+              <a routerLink="/register/provider" class="btn btn-primary btn-lg">Register as
+              Provider →</a>
+            }
+          }
+        </div>
+        <div class="cta-stats">
+          @for (ps of providerStats; track ps) {
+            <div class="provider-stat-card">
+              <span class="ps-value">{{ ps.value }}</span>
+              <span class="ps-label">{{ ps.label }}</span>
+              <span class="ps-sub">{{ ps.sub }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>

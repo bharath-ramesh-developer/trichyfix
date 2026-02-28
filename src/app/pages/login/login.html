@@ -1,0 +1,122 @@
+<div class="login-page">
+  <div class="login-container">
+    <!-- Logo -->
+    <a routerLink="/" class="login-logo">
+      <div class="logo-icon">⚡</div>
+      <span class="logo-text">Trichy<span class="accent">Fix</span></span>
+    </a>
+
+    <h1 class="login-title">Welcome Back</h1>
+    <p class="login-subtitle">Login to your TrichyFix account</p>
+
+    <div class="login-card">
+      <!-- Error / Success Messages -->
+      @if (errorMsg) {
+        <div class="msg msg-error">
+          <span>❌</span> {{ errorMsg }}
+        </div>
+      }
+      @if (successMsg) {
+        <div class="msg msg-success">
+          <span>✅</span> {{ successMsg }}
+        </div>
+      }
+
+      <!-- Email/Password Form -->
+      @if (loginMode === 'password') {
+        <div class="login-form">
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <div class="form-input-icon has-prefix">
+              <span class="icon-left">📱</span>
+              <span class="prefix-text">+91</span>
+              <input type="tel" class="form-input" placeholder="xxxxx xxxxx" [(ngModel)]="phone"
+                maxlength="10" (keyup.enter)="onLogin()" (keypress)="allowOnlyNumbers($event)"
+                (paste)="onPaste($event)">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="label-row">
+                <label class="form-label">Password</label>
+                <a href="javascript:void(0)" class="forgot-link" (click)="switchMode('forgot-password')">Forgot
+                password?</a>
+              </div>
+              <div class="form-input-icon">
+                <span class="icon-left">🔒</span>
+                <input [type]="showPassword ? 'text' : 'password'" class="form-input"
+                  placeholder="Enter your password" [(ngModel)]="password" (keyup.enter)="onLogin()">
+                  <span class="icon-right" (click)="togglePassword()">{{ showPassword ? '🙈' : '👁' }}</span>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-lg login-btn" (click)="onLogin()" [disabled]="loading">
+                {{ loading ? 'Logging in...' : 'Login →' }}
+              </button>
+            </div>
+          }
+
+          <!-- Forgot Password Form -->
+          @if (loginMode === 'forgot-password') {
+            <div class="login-form">
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <div class="form-input-icon has-prefix">
+                  <span class="icon-left">📱</span>
+                  <span class="prefix-text">+91</span>
+                  <input type="tel" class="form-input" placeholder="xxxxx xxxxx" [(ngModel)]="phone"
+                    maxlength="10" [readonly]="otpSent" (keyup.enter)="!otpSent ? sendOTP() : null"
+                    (keypress)="allowOnlyNumbers($event)" (paste)="onPaste($event)">
+                  </div>
+                </div>
+                <!-- OTP & New Password (after sending) -->
+                @if (otpSent) {
+                  <div class="form-group">
+                    <label class="form-label">Enter OTP</label>
+                    <div class="otp-row">
+                      <input type="text" class="form-input otp-field" placeholder="4-digit OTP" [(ngModel)]="otp"
+                        maxlength="4" (keypress)="allowOnlyNumbers($event)" (paste)="onPaste($event)">
+                        <button class="btn btn-sm resend-btn" [disabled]="otpTimer > 0" (click)="resendOTP()">
+                          {{ otpTimer > 0 ? 'Resend (' + otpTimer + 's)' : 'Resend' }}
+                        </button>
+                      </div>
+                      <span class="otp-hint">SMS Verification sent to {{ phone }}.</span>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">New Password</label>
+                      <div class="form-input-icon">
+                        <span class="icon-left">🔒</span>
+                        <input [type]="showPassword ? 'text' : 'password'" class="form-input"
+                          placeholder="Enter new password" [(ngModel)]="password"
+                          (keyup.enter)="verifyAndResetPassword()">
+                          <span class="icon-right" (click)="togglePassword()">{{ showPassword ? '🙈' : '👁' }}</span>
+                        </div>
+                      </div>
+                    }
+                    @if (!otpSent) {
+                      <button class="btn btn-primary btn-lg login-btn" (click)="sendOTP()"
+                        [disabled]="loading">
+                        {{ loading ? 'Sending...' : 'Send OTP →' }}
+                      </button>
+                    }
+                    @if (otpSent) {
+                      <button class="btn btn-primary btn-lg login-btn" (click)="verifyAndResetPassword()"
+                        [disabled]="loading">
+                        {{ loading ? 'Verifying...' : 'Reset Password →' }}
+                      </button>
+                    }
+                  </div>
+                }
+
+                <!-- Toggle Mode -->
+                @if (loginMode === 'forgot-password') {
+                  <button class="btn-mode" style="margin-top: 20px;"
+                    (click)="switchMode('password')">
+                    ⬅ Back to Login
+                  </button>
+                }
+              </div>
+
+              <p class="register-link">
+                Don't have an account? <a routerLink="/register">Register</a>
+              </p>
+            </div>
+          </div>

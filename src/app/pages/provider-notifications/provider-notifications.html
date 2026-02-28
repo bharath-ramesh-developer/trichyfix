@@ -1,0 +1,96 @@
+<div class="dashboard-layout">
+  <!-- Sidebar (Consistent with Dashboard) -->
+  <aside class="sidebar">
+    <a routerLink="/" class="sidebar-logo">
+      <div class="logo-icon">⚡</div>
+      <span class="logo-text">Trichy<span class="accent">Fix</span></span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'dashboard'}" class="sidebar-link">
+        <span class="link-icon">📊</span> Dashboard
+      </a>
+      <a routerLink="/provider/notifications" class="sidebar-link active">
+        <span class="link-icon">🔔</span> Notifications
+      </a>
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'bookings'}" class="sidebar-link">
+        <span class="link-icon">📅</span> Bookings
+      </a>
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'earnings'}" class="sidebar-link">
+        <span class="link-icon">💰</span> Earnings
+      </a>
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'profile'}" class="sidebar-link">
+        <span class="link-icon">👤</span> Profile
+      </a>
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'settings'}" class="sidebar-link">
+        <span class="link-icon">⚙️</span> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a routerLink="/" class="sidebar-link logout">
+        <span class="link-icon">🚪</span> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <!-- Bell Banner -->
+    <div class="notif-banner">
+      <div class="banner-left">
+        <span class="banner-icon">🔔</span>
+        <div>
+          <h1 class="banner-title">Notifications</h1>
+          <p class="banner-subtitle">You have <strong>{{ unreadCount }}</strong> unread notifications</p>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" (click)="markAllRead()">Mark All Read</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="notif-tabs">
+      <button class="tab" [class.active]="activeTab === 'all'" (click)="activeTab = 'all'">All</button>
+      <button class="tab" [class.active]="activeTab === 'bookings'"
+      (click)="activeTab = 'bookings'">Bookings</button>
+      <button class="tab" [class.active]="activeTab === 'reviews'"
+      (click)="activeTab = 'reviews'">Reviews</button>
+      <button class="tab" [class.active]="activeTab === 'system'" (click)="activeTab = 'system'">System</button>
+    </div>
+
+    <!-- Notification Feed -->
+    <div class="notif-feed">
+      @for (notif of filteredNotifications; track notif) {
+        <div class="notif-item" [class.unread]="!notif.read"
+          (click)="markAsRead(notif.id)">
+          <div class="notif-icon-wrap" [class]="'type-' + notif.type">
+            {{ getTypeIcon(notif.type) }}
+          </div>
+          <div class="notif-content">
+            <h4 class="notif-title">{{ notif.title }}</h4>
+            <p class="notif-message">{{ notif.message }}</p>
+            <span class="notif-time">{{ notif.time }}</span>
+            @if (notif.actionRequired) {
+              <div class="notif-actions">
+                <button class="btn btn-success btn-sm"
+                (click)="acceptFromNotification(notif.id); $event.stopPropagation()">Accept</button>
+                <button class="btn btn-danger btn-sm"
+                (click)="declineFromNotification(notif.id); $event.stopPropagation()">Decline</button>
+              </div>
+            }
+          </div>
+          @if (!notif.read) {
+            <span class="unread-dot"></span>
+          }
+        </div>
+      }
+
+      @if (filteredNotifications.length === 0) {
+        <div class="empty-feed">
+          <span class="empty-icon">📭</span>
+          <p>No notifications in this category</p>
+        </div>
+      }
+    </div>
+  </main>
+</div>

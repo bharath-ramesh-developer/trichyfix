@@ -1,0 +1,239 @@
+<div class="register-page">
+  <!-- Left Panel -->
+  <div class="register-left">
+    <div class="left-content">
+      <a routerLink="/" class="reg-logo">
+        <div class="logo-icon">⚡</div>
+        <span class="logo-text">Trichy<span class="accent">Fix</span></span>
+      </a>
+      <h1 class="left-title">Join Trichy's #1<br>Home Services Platform</h1>
+      <p class="left-desc">Register as a service provider, get verified, and start earning. 500+ providers already
+      trust us.</p>
+      <ul class="left-features">
+        <li>✅ Verified professionals only</li>
+        <li>✅ Transparent pricing</li>
+        <li>✅ 24/7 emergency support</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="register-right">
+    <div class="right-content">
+      <a routerLink="/register" class="back-link">← Back</a>
+      <h2 class="right-title">Provider Registration</h2>
+      <p class="right-subtitle">Register to get verified to start receiving jobs</p>
+
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step" [class.active]="currentStep >= 1" [class.done]="currentStep > 1">
+          <div class="step-circle">{{ currentStep > 1 ? '✓' : '1' }}</div>
+          <span class="step-label">Personal Info</span>
+        </div>
+        <div class="step-line" [class.active]="currentStep >= 2"></div>
+        <div class="step" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
+          <div class="step-circle">{{ currentStep > 2 ? '✓' : '2' }}</div>
+          <span class="step-label">Service Details</span>
+        </div>
+        <div class="step-line" [class.active]="currentStep >= 3"></div>
+        <div class="step" [class.active]="currentStep >= 3">
+          <div class="step-circle">3</div>
+          <span class="step-label">Verification</span>
+        </div>
+      </div>
+
+      <!-- STEP 1: Personal Information -->
+      @if (currentStep === 1) {
+        <form class="step-form" (ngSubmit)="nextStep()">
+          <h3 class="step-title">Step 1: Personal Information</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" class="form-input" placeholder="Your full name" [(ngModel)]="fullName"
+                name="fullName">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone *</label>
+                <div class="phone-otp-row">
+                  <div class="form-input-icon phone-input-wrap has-prefix" style="width: 100%;">
+                    <span class="icon-left">📱</span>
+                    <span class="prefix-text">+91</span>
+                    <input type="tel" class="form-input" placeholder="xxxxx xxxxx" [(ngModel)]="phone"
+                      name="phone" [readonly]="otpVerified" maxlength="10"
+                      (keypress)="allowOnlyNumbers($event)" (paste)="onPaste($event)">
+                    </div>
+                    @if (!otpVerified) {
+                      <button type="button" class="btn btn-otp"
+                        [disabled]="otpLoading || (otpSent && otpTimer > 0)" (click)="sendOTP()">
+                        {{ otpLoading ? '...' : otpSent ? (otpTimer > 0 ? otpTimer + 's' : 'Resend') : 'OTP' }}
+                      </button>
+                    }
+                    @if (otpVerified) {
+                      <span class="verified-badge-sm">✅</span>
+                    }
+                  </div>
+                </div>
+              </div>
+              <!-- OTP row -->
+              @if (otpSent && !otpVerified) {
+                <div class="form-group">
+                  <label class="form-label">Enter OTP</label>
+                  <div class="otp-verify-row">
+                    <input type="text" class="form-input otp-input" placeholder="4-digit OTP" [(ngModel)]="otpCode"
+                      name="otpCode" maxlength="4" (keypress)="allowOnlyNumbers($event)"
+                      (paste)="onPaste($event)">
+                      <button type="button" class="btn btn-primary btn-sm" (click)="verifyOTP()"
+                      [disabled]="otpLoading">Verify</button>
+                    </div>
+                    @if (otpError) {
+                      <span class="otp-error">{{ otpError }}</span>
+                    }
+                  </div>
+                }
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Password *</label>
+                    <div class="form-input-icon">
+                      <span class="icon-left">🔒</span>
+                      <input [type]="showPassword ? 'text' : 'password'" class="form-input"
+                        placeholder="Create a password" [(ngModel)]="password" name="password">
+                        <span class="icon-right" (click)="togglePassword()">{{ showPassword ? '🙈' : '👁' }}</span>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Years of Experience</label>
+                      <input type="number" class="form-input" placeholder="e.g. 5" [(ngModel)]="experience"
+                        name="experience">
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg step-btn">Next: Service Details →</button>
+                  </form>
+                }
+
+                <!-- STEP 2: Service Details -->
+                @if (currentStep === 2) {
+                  <form class="step-form" (ngSubmit)="nextStep()">
+                    <h3 class="step-title">Step 2: Service Details</h3>
+                    <div class="form-group">
+                      <label class="form-label">Service Categories *</label>
+                      <div class="chip-grid">
+                        @for (cat of categories; track cat) {
+                          <button type="button" class="chip"
+                            [class.selected]="selectedCategories.includes(cat)" (click)="toggleCategory(cat)">{{ cat
+                          }}</button>
+                        }
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Areas Served</label>
+                      <div class="chip-grid">
+                        @for (area of areas; track area) {
+                          <button type="button" class="chip"
+                            [class.selected]="selectedAreas.includes(area)" (click)="toggleArea(area)">{{ area
+                          }}</button>
+                        }
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label">Price Range (MIN ₹/hr)</label>
+                        <input type="number" class="form-input" placeholder="Min" [(ngModel)]="priceMin"
+                          name="priceMin">
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label">Price Range (MAX ₹/hr)</label>
+                          <input type="number" class="form-input" placeholder="Max" [(ngModel)]="priceMax"
+                            name="priceMax">
+                          </div>
+                        </div>
+                        <label class="terms-check emergency-toggle">
+                          <input type="checkbox" [(ngModel)]="emergencyAvailable" name="emergencyAvailable">
+                          <span>🚨 Available for emergency calls (24/7)</span>
+                        </label>
+                        <div class="step-nav">
+                          <button type="button" class="btn btn-outline" (click)="prevStep()">← Back</button>
+                          <button type="submit" class="btn btn-primary">Next: Verification →</button>
+                        </div>
+                      </form>
+                    }
+
+                    <!-- STEP 3: Verification & ID Proof -->
+                    @if (currentStep === 3) {
+                      <form class="step-form" (ngSubmit)="onSubmit()">
+                        <h3 class="step-title">Step 3: Verification & ID Proof</h3>
+                        <div class="form-group">
+                          <label class="form-label">ID Proof Type</label>
+                          <select class="form-input form-select-styled" [(ngModel)]="idProofType" name="idProofType">
+                            <option value="">Select ID type</option>
+                            @for (t of idProofTypes; track t) {
+                              <option [value]="t">{{ t }}</option>
+                            }
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label">Upload ID Proof</label>
+                          <div class="file-upload" (click)="idInput.click()">
+                            <input #idInput type="file" accept="image/*,.pdf" hidden (change)="onIdProofChange($event)">
+                            <div class="upload-area">
+                              <span class="upload-icon">📎</span>
+                              @if (!idProof) {
+                                <span>Click to upload or drag & drop<br><small>JPG, PNG, PDF (max
+                                5MB)</small></span>
+                              }
+                              @if (idProof) {
+                                <span class="file-name">{{ idProof.name }}</span>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label">Upload Profile Photo</label>
+                          <div class="file-upload profile-upload" (click)="photoInput.click()">
+                            <input #photoInput type="file" accept="image/*" hidden (change)="onProfilePhotoChange($event)">
+                            <div class="upload-area">
+                              <span class="upload-icon">📷</span>
+                              @if (!profilePhoto) {
+                                <span>Upload your professional photo</span>
+                              }
+                              @if (profilePhoto) {
+                                <span class="file-name">{{ profilePhoto.name }}</span>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label">About / Bio</label>
+                          <textarea class="form-input form-textarea" rows="3"
+                            placeholder="Briefly describe your experience and skills" [(ngModel)]="aboutBio"
+                          name="aboutBio"></textarea>
+                        </div>
+                        <label class="terms-check">
+                          <input type="checkbox" [(ngModel)]="agreeTerms" name="agreeTerms">
+                          <span>I understand and agree TrichyFix may verify and post my profile on their platform and <a
+                          href="#">Terms of Service</a></span>
+                        </label>
+                        <div class="step-nav">
+                          <button type="button" class="btn btn-outline" (click)="prevStep()">← Back</button>
+                          <button type="submit" class="btn btn-primary btn-lg">Submit for Verification →</button>
+                        </div>
+                      </form>
+                    }
+
+                    <p class="login-link">Already registered? <a routerLink="/login">Login</a></p>
+                  </div>
+                </div>
+
+                <!-- Live Action Snackbar Component -->
+                <div class="snackbar" [class.show]="snackbarVisible" [ngClass]="snackbarType">
+                  @if (snackbarType === 'success') {
+                    <span class="sb-icon">✅</span>
+                  }
+                  @if (snackbarType === 'warning') {
+                    <span class="sb-icon">⚠️</span>
+                  }
+                  @if (snackbarType === 'error') {
+                    <span class="sb-icon">❌</span>
+                  }
+                  <span class="sb-text">{{ snackbarMessage }}</span>
+                </div>
+              </div>

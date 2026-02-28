@@ -1,0 +1,365 @@
+.register-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+}
+
+/* Left Panel */
+.register-left {
+    background: var(--dark-navy);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+}
+
+.left-content {
+    max-width: 380px;
+}
+
+.reg-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.reg-logo .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--gradient-orange);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
+}
+
+.reg-logo .logo-text {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.reg-logo .accent {
+    color: var(--primary-orange);
+}
+
+.left-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+.left-desc {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.left-features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.left-features li {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.92rem;
+}
+
+/* Right Panel */
+.register-right {
+    background: var(--white);
+    padding: 40px 48px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.right-content {
+    width: 100%;
+    max-width: 520px;
+    padding-top: 20px;
+}
+
+.back-link {
+    color: var(--gray-500);
+    font-size: 0.88rem;
+    display: inline-block;
+    margin-bottom: 16px;
+    transition: color var(--transition-fast);
+}
+
+.back-link:hover {
+    color: var(--primary-orange);
+}
+
+.right-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--dark-navy);
+    margin-bottom: 4px;
+}
+
+.right-subtitle {
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-select-styled {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 36px;
+}
+
+/* Phone + OTP */
+.phone-otp-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.phone-input-wrap {
+    flex: 1;
+}
+
+.btn-otp {
+    padding: 12px 20px;
+    background: var(--dark-navy);
+    color: var(--white);
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-width: 100px;
+    height: 48px;
+}
+
+.btn-otp:hover {
+    background: var(--dark-navy-light);
+}
+
+.btn-otp:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+    background: var(--success-light);
+    color: #15803D;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    height: 48px;
+    white-space: nowrap;
+}
+
+/* OTP Input */
+.otp-group {
+    animation: fadeInUp 0.3s ease;
+}
+
+.otp-verify-row {
+    display: flex;
+    gap: 10px;
+}
+
+.otp-input {
+    max-width: 220px;
+    letter-spacing: 4px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.btn-verify {
+    white-space: nowrap;
+}
+
+.otp-error {
+    display: block;
+    color: var(--danger);
+    font-size: 0.82rem;
+    margin-top: 6px;
+}
+
+.otp-hint {
+    display: block;
+    color: var(--gray-400);
+    font-size: 0.78rem;
+    margin-top: 4px;
+}
+
+/* Readonly field styling */
+.form-input[readonly] {
+    background: var(--gray-50);
+    color: var(--gray-500);
+    cursor: not-allowed;
+}
+
+/* Terms */
+.terms-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    cursor: pointer;
+}
+
+.terms-check input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-orange);
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.terms-check a {
+    color: var(--primary-orange);
+    font-weight: 500;
+}
+
+.reg-btn {
+    width: 100%;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--gray-500);
+}
+
+.login-link a {
+    color: var(--primary-orange);
+    font-weight: 600;
+}
+
+/* ===== Tablet (768px - 1024px) ===== */
+@media (max-width: 1024px) {
+    .register-page {
+        grid-template-columns: 1fr 1.5fr;
+    }
+
+    .register-left {
+        padding: 36px;
+    }
+
+    .register-right {
+        padding: 36px;
+    }
+
+    .left-title {
+        font-size: 1.7rem;
+    }
+}
+
+/* ===== Mobile (< 768px) ===== */
+@media (max-width: 768px) {
+    .register-page {
+        grid-template-columns: 1fr;
+    }
+
+    .register-left {
+        padding: 32px 24px;
+    }
+
+    .left-content {
+        max-width: 100%;
+    }
+
+    .left-title {
+        font-size: 1.5rem;
+    }
+
+    .register-right {
+        padding: 28px 20px;
+    }
+
+    .right-content {
+        padding-top: 8px;
+    }
+
+    .right-title {
+        font-size: 1.4rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .phone-otp-row {
+        flex-direction: column;
+    }
+
+    .btn-otp {
+        width: 100%;
+    }
+
+    .otp-verify-row {
+        flex-direction: column;
+    }
+
+    .otp-input {
+        max-width: 100%;
+    }
+}
+
+/* ===== Small Mobile (< 480px) ===== */
+@media (max-width: 480px) {
+    .register-left {
+        padding: 24px 16px;
+    }
+
+    .register-right {
+        padding: 24px 16px;
+    }
+
+    .left-title {
+        font-size: 1.3rem;
+    }
+
+    .right-title {
+        font-size: 1.25rem;
+    }
+
+    .left-desc {
+        font-size: 0.85rem;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

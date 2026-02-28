@@ -1,0 +1,146 @@
+<div class="bookings-page">
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">My Bookings</h1>
+      <p class="page-subtitle">Track your service requests and manage your bookings</p>
+    </div>
+  </div>
+
+  <div class="container content-grid">
+    <!-- Filters Sidebar -->
+    <aside class="sidebar">
+      <div class="filter-card card">
+        <h3 class="filter-title">Filter by Status</h3>
+        <div class="filter-options">
+          <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="activeFilter = 'all'">
+            <span class="dot"></span> All Bookings
+            <span class="count">{{ bookings?.length || 0 }}</span>
+          </button>
+          <button class="filter-btn" [class.active]="activeFilter === 'ongoing'"
+            (click)="activeFilter = 'ongoing'">
+            <span class="dot ongoing"></span> Ongoing
+            <span class="count">{{ (bookings | filter: 'pending':'accepted':'in-progress')?.length || 0
+            }}</span>
+          </button>
+          <button class="filter-btn" [class.active]="activeFilter === 'completed'"
+            (click)="activeFilter = 'completed'">
+            <span class="dot completed"></span> History
+            <span class="count">{{ (bookings | filter: 'completed':'cancelled')?.length || 0 }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="help-card card">
+        <div class="help-icon">💡</div>
+        <h4>Need Help?</h4>
+        <p>Having issues with your booking? Contact our support team for quick resolution.</p>
+        <a href="#" class="btn btn-outline btn-sm">Support Center</a>
+      </div>
+    </aside>
+
+    <!-- Bookings List -->
+    <main class="bookings-list">
+      @if (loading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Fetching your bookings...</p>
+        </div>
+      }
+
+      @if (!loading && error) {
+        <div class="error-banner">
+          <span class="error-icon">⚠️</span>
+          {{ error }}
+          <button (click)="fetchBookings()" class="retry-link">Retry</button>
+        </div>
+      }
+
+      @if (!loading && !error) {
+        @if (!filteredBookings || filteredBookings.length === 0) {
+          <div class="empty-state card">
+            <div class="empty-icon">📅</div>
+            <h3>No Bookings Found</h3>
+            <p>You haven't made any bookings in this category yet.</p>
+            <a routerLink="/services" class="btn btn-primary">Book a Service</a>
+          </div>
+        }
+        @for (b of filteredBookings; track b) {
+          <div class="booking-card card animate-fadeIn">
+            <div class="card-header">
+              <div class="booking-meta">
+                <span class="booking-id">ID: {{ b.id }}</span>
+                <span class="booking-date">{{ b.date | date:'dd/MM/yyyy' }} • {{ b.time }}</span>
+              </div>
+              <div class="status-badge" [ngClass]="getStatusClass(b.status)">
+                {{ b.status === 'cancelled' ? 'Rejected due to unavailability' : (b.status | titlecase) }}
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="provider-info">
+                <div class="provider-avatar">{{ b.providerName?.charAt(0) }}</div>
+                <div class="provider-details">
+                  <h4 class="provider-name">{{ b.providerName }}</h4>
+                  <p class="provider-service">{{ b.providerCategory }}</p>
+                  @if (b.providerPhone) {
+                    <p class="provider-contact" style="margin-top: 4px;">
+                      <a [href]="'tel:' + b.providerPhone"
+                        style="color: var(--primary-orange); text-decoration: none; font-size: 0.85rem; font-weight: 700;">📞
+                      {{ b.providerPhone }}</a>
+                    </p>
+                  }
+                </div>
+              </div>
+              <div class="job-description">
+                <span class="label">Issue Description:</span>
+                <p class="desc-text">{{ b.description }}</p>
+              </div>
+              @if (b.isEmergency) {
+                <div class="emergency-tag">
+                  🚑 Emergency Request
+                </div>
+              }
+            </div>
+            <div class="card-footer">
+              <div class="price-info">
+                <span class="label">Total Amount</span>
+                <span class="amount">₹{{ b.price }}</span>
+              </div>
+              <div class="actions">
+                <!-- Show Track button for active jobs -->
+                @if (['pending', 'accepted', 'in-progress'].includes(b.status)) {
+                  <button
+                  (click)="fetchBookings()" class="btn btn-dark btn-sm">Track Progress</button>
+                }
+                <!-- Show Rate button for completed jobs without rating -->
+                @if (b.status === 'completed' && !b.rating) {
+                  <div class="rating-section">
+                    @if (ratingBookingId !== b.id) {
+                      <button (click)="ratingBookingId = b.id"
+                      class="btn btn-primary btn-sm">⭐ Rate Service</button>
+                    }
+                    @if (ratingBookingId === b.id) {
+                      <div class="star-rating">
+                        <span class="star" (click)="submitRating(b.id, 5)">★</span>
+                        <span class="star" (click)="submitRating(b.id, 4)">★</span>
+                        <span class="star" (click)="submitRating(b.id, 3)">★</span>
+                        <span class="star" (click)="submitRating(b.id, 2)">★</span>
+                        <span class="star" (click)="submitRating(b.id, 1)">★</span>
+                      </div>
+                    }
+                  </div>
+                }
+                <!-- Show Rating if already rated -->
+                @if (b.rating) {
+                  <div class="rated-badge">
+                    Rated: {{ b.rating }}/5 ⭐
+                  </div>
+                }
+                <button class="btn btn-outline btn-sm">Details</button>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </main>
+  </div>
+</div>

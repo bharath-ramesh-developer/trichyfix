@@ -1,0 +1,125 @@
+<div class="admin-layout">
+  <!-- Sidebar (Consistent with main Admin Panel) -->
+  <aside class="sidebar">
+    <a routerLink="/" class="sidebar-logo">
+      <div class="logo-icon">⚡</div>
+      <span class="logo-text">Trichy<span class="accent">Fix</span></span>
+    </a>
+    <span class="sidebar-badge">ADMIN</span>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin" class="sidebar-link">
+        <span class="link-icon">📊</span> Dashboard
+      </a>
+      <a routerLink="/admin" class="sidebar-link">
+        <span class="link-icon">👨‍🔧</span> Providers
+      </a>
+      <a routerLink="/admin/verification" class="sidebar-link active">
+        <span class="link-icon">✅</span> Verification
+      </a>
+      <a routerLink="/admin" class="sidebar-link">
+        <span class="link-icon">📅</span> Bookings
+      </a>
+      <a routerLink="/admin" class="sidebar-link">
+        <span class="link-icon">👥</span> Users
+      </a>
+      <a routerLink="/admin" class="sidebar-link">
+        <span class="link-icon">⚙️</span> Settings
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a routerLink="/" class="sidebar-link logout"><span class="link-icon">🚪</span> Logout</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+    <!-- Shield Banner -->
+    <div class="verify-banner">
+      <div class="banner-content">
+        <span class="banner-shield">🛡️</span>
+        <div>
+          <h1 class="banner-title">Provider Verification</h1>
+          <p class="banner-subtitle">Review and verify new provider applications. {{ pendingRequests.length }}
+          pending requests.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verification Cards -->
+    <div class="verify-cards">
+      @for (req of requests; track req) {
+        <div class="verify-card" [class.approved]="req.status === 'approved'"
+          [class.rejected]="req.status === 'rejected'">
+          <div class="vc-header">
+            <div class="vc-avatar">{{ req.initial }}</div>
+            <div class="vc-info">
+              <h3 class="vc-name">{{ req.name }}</h3>
+              <span class="vc-category">{{ req.category }}</span>
+            </div>
+            <span class="badge" [class.badge-pending]="req.status === 'pending'"
+              [class.badge-available]="req.status === 'approved'"
+              [class.badge-busy]="req.status === 'rejected'">
+              {{ req.status }}
+            </span>
+          </div>
+          <div class="vc-details">
+            <div class="vc-detail-grid">
+              <div class="vc-detail">
+                <span class="detail-label">📍 Area</span>
+                <span class="detail-value">{{ req.area }}</span>
+              </div>
+              <div class="vc-detail">
+                <span class="detail-label">📞 Phone</span>
+                <span class="detail-value">{{ req.phone }}</span>
+              </div>
+              <div class="vc-detail">
+                <span class="detail-label">⏱ Experience</span>
+                <span class="detail-value">{{ req.experience }} years</span>
+              </div>
+              <div class="vc-detail">
+                <span class="detail-label">📅 Submitted</span>
+                <span class="detail-value">{{ req.submitted }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="vc-document">
+            <h4 class="doc-title">📄 ID Document</h4>
+            <div class="doc-info">
+              <div class="doc-preview">
+                <span class="doc-icon">🪪</span>
+              </div>
+              <div class="doc-details">
+                <span class="doc-type">{{ req.idType }}</span>
+                <span class="doc-number">{{ req.idNumber }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="vc-skills">
+            <h4 class="skills-title">🔧 Skills</h4>
+            <div class="skills-list">
+              @for (skill of req.skills; track skill) {
+                <span class="skill-chip">{{ skill }}</span>
+              }
+            </div>
+          </div>
+          @if (req.status === 'pending') {
+            <div class="vc-actions">
+              <button class="btn btn-success" (click)="approveRequest(req.id)">✅ Approve Provider</button>
+              <button class="btn btn-danger" (click)="rejectRequest(req.id)">❌ Reject</button>
+            </div>
+          }
+          @if (req.status === 'approved') {
+            <div class="vc-status-msg approved-msg">
+              ✅ This provider has been verified and approved
+            </div>
+          }
+          @if (req.status === 'rejected') {
+            <div class="vc-status-msg rejected-msg">
+              ❌ This provider application was rejected
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </main>
+</div>

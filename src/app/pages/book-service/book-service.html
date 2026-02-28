@@ -1,0 +1,153 @@
+<div class="book-page">
+  <section class="page-header">
+    <div class="container">
+      <a routerLink="/services" class="back-link">← Back to Services</a>
+      <h1 class="page-title">Book <span>Service</span></h1>
+    </div>
+  </section>
+
+  <section class="book-content">
+    <div class="container">
+      @if (loading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading provider details...</p>
+        </div>
+      }
+
+      @if (error) {
+        <div class="error-msg">
+          <span class="icon">❌</span>
+          {{ error }}
+          <a routerLink="/services" class="btn btn-sm">Explore Other Services</a>
+        </div>
+      }
+
+      @if (!loading && provider) {
+        <div class="book-grid">
+          <!-- Provider Profile Card -->
+          <div class="provider-profile card">
+            <div class="profile-top">
+              <div class="profile-avatar">{{ provider.initial }}</div>
+              <div class="profile-info">
+                <h2 class="profile-name">{{ provider.name }}</h2>
+                <span class="profile-category">{{ provider.category }}</span>
+                <div class="profile-rating">
+                  <span class="star">⭐</span>
+                  <span class="rating-val">{{ provider.rating }}</span>
+                  <span class="rating-cnt">({{ provider.reviews }} reviews)</span>
+                </div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <div class="detail-row">
+                <span class="detail-icon">📍</span>
+                <span>{{ provider.area }}, Trichy</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-icon">⏱</span>
+                <span>{{ provider.experience }} years experience</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-icon">💰</span>
+                <span>₹{{ provider.price }}{{ provider.priceUnit }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-icon">📞</span>
+                <span>{{ provider.phone }}</span>
+              </div>
+            </div>
+            <div class="profile-tags">
+              @if (provider.verified) {
+                <span class="badge badge-verified">✅ Verified</span>
+              }
+              @if (provider.emergency) {
+                <span class="badge badge-emergency">🚨 Emergency</span>
+              }
+              @if (provider.available) {
+                <span class="badge badge-available">Available</span>
+              }
+              @if (!provider.available) {
+                <span class="badge badge-unavailable">Busy</span>
+              }
+            </div>
+            <p class="profile-desc">{{ provider.desc }}</p>
+            <div class="profile-skills">
+              <h4>Skills & Services</h4>
+              <div class="skills-list">
+                @for (skill of provider.skills; track skill) {
+                  <span class="skill-tag">{{ skill }}</span>
+                }
+              </div>
+            </div>
+          </div>
+          <!-- Booking Form -->
+          <div class="booking-form card">
+            <h3 class="form-title">📅 Book Appointment</h3>
+            <p class="form-subtitle">Select your preferred date and time</p>
+            <div class="form-group">
+              <label class="form-label">Select Date *</label>
+              <input type="date" class="form-input" [(ngModel)]="selectedDate" [min]="todayDate">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Select Time Slot *</label>
+              <div class="time-slots">
+                @for (time of timeSlots; track time) {
+                  <button class="time-slot"
+                    [class.selected]="selectedTime === time" (click)="selectTime(time)">
+                    {{ time }}
+                  </button>
+                }
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Describe Your Issue *</label>
+              <textarea class="form-input form-textarea" rows="3"
+                placeholder="E.g., Fan not working, need MCB replacement..."
+              [(ngModel)]="issueDescription"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Detailed Address *</label>
+              <textarea class="form-input form-textarea" rows="3"
+                placeholder="Min 30 characters. Deliver exact venue mapping..."
+              [(ngModel)]="detailedAddress" minlength="30"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="emergency-check">
+                <input type="checkbox" [(ngModel)]="isEmergency">
+                <span class="check-label">🚨 This is an emergency (faster response, may cost extra)</span>
+              </label>
+            </div>
+            <!-- Booking Summary Box -->
+            @if (selectedDate && selectedTime) {
+              <div class="booking-summary">
+                <h4>Booking Summary</h4>
+                <div class="summary-row">
+                  <span>Provider</span>
+                  <span>{{ provider.name }}</span>
+                </div>
+                <div class="summary-row">
+                  <span>Date</span>
+                  <span>{{ selectedDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="summary-row">
+                  <span>Time</span>
+                  <span>{{ selectedTime }}</span>
+                </div>
+                <div class="summary-row total">
+                  <span>Service Charge</span>
+                  <span>₹{{ provider.price }}</span>
+                </div>
+              </div>
+            }
+            <button class="btn btn-primary btn-lg confirm-btn" (click)="submitBooking()"
+              [disabled]="bookingLoading">
+              {{ bookingLoading ? 'Processing...' : 'Confirm Booking →' }}
+            </button>
+            <p class="security-note">🔒 Secure booking powered by TrichyFix</p>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+</div>

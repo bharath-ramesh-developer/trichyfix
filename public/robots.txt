@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /provider/dashboard
+Disallow: /my-bookings
+
+Sitemap: https://trichyfix.com/sitemap.xml

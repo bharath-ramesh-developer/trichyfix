@@ -1,0 +1,336 @@
+<div class="dashboard-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a routerLink="/" class="sidebar-logo">
+      <div class="logo-icon">⚡</div>
+      <span class="logo-text">Trichy<span class="accent">Fix</span></span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'dashboard'}" class="sidebar-link"
+        [class.active]="activeTab === 'dashboard'">
+        <span class="link-icon">📊</span> Dashboard
+      </a>
+      <a routerLink="/provider/notifications" class="sidebar-link">
+        <span class="link-icon">🔔</span> Notifications
+      </a>
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'bookings'}" class="sidebar-link"
+        [class.active]="activeTab === 'bookings'">
+        <span class="link-icon">📅</span> Bookings
+      </a>
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'earnings'}" class="sidebar-link"
+        [class.active]="activeTab === 'earnings'">
+        <span class="link-icon">💰</span> Earnings
+      </a>
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'profile'}" class="sidebar-link"
+        [class.active]="activeTab === 'profile'">
+        <span class="link-icon">👤</span> Profile
+      </a>
+      <a [routerLink]="['/provider/dashboard']" [queryParams]="{tab: 'settings'}" class="sidebar-link"
+        [class.active]="activeTab === 'settings'">
+        <span class="link-icon">⚙️</span> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="auth.logout()" class="sidebar-link logout-btn">
+        <span class="link-icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Fetching latest updates...</p>
+      </div>
+    }
+
+    @if (error) {
+      <div class="error-banner">
+        <span>⚠️ {{ error }}</span>
+        <button (click)="fetchDashboardData()" class="btn btn-sm">Retry</button>
+      </div>
+    }
+
+    <!-- Top Bar -->
+    <header class="dash-header">
+      <div>
+        <h1 class="dash-title">{{ activeTab | titlecase }}</h1>
+        @if (provider && activeTab === 'dashboard') {
+          <p class="dash-subtitle">Welcome back, {{
+          provider.firstName }}!</p>
+        }
+      </div>
+      <div class="dash-user">
+        <a routerLink="/provider/notifications" class="notif-bell">
+          🔔 <span class="notif-dot"></span>
+        </a>
+        <div class="user-avatar">{{ provider?.firstName?.charAt(0) || 'P' }}</div>
+      </div>
+    </header>
+
+    <!-- Tab: Dashboard -->
+    @if (activeTab === 'dashboard' && !loading) {
+      <div class="tab-content fade-in">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          @for (stat of displayStats; track stat) {
+            <div class="stat-card">
+              <div class="stat-icon" [style.background]="stat.color + '15'" [style.color]="stat.color">
+                {{ stat.icon }}
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">{{ stat.label }}</span>
+                <span class="stat-value">{{ stat.value }}</span>
+                <span class="stat-change">{{ stat.change }}</span>
+              </div>
+            </div>
+          }
+        </div>
+        <!-- Recent Bookings -->
+        <div class="bookings-section">
+          <div class="section-top">
+            <h2 class="section-heading">Active & Recent Bookings</h2>
+            <button class="btn btn-sm btn-outline" (click)="switchTab('bookings')">See All</button>
+          </div>
+          <div class="bookings-table-wrap">
+            @if (recentBookings && recentBookings.length > 0) {
+              <table class="bookings-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Date/Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (booking of recentBookings | slice:0:5; track booking) {
+                    <tr>
+                      <td class="booking-id">#{{ booking.id }}</td>
+                      <td class="booking-customer">
+                        <strong>{{ booking.customerName }}</strong>
+                        @if (['accepted', 'in-progress', 'completed'].includes(booking.status) && booking.customerPhone) {
+                          <div
+                            style="margin-top: 4px;">
+                            <a [href]="'tel:' + booking.customerPhone"
+                              style="color: var(--primary-orange); text-decoration: none; font-size: 0.85rem; font-weight: 700;">📞
+                            {{ booking.customerPhone }}</a>
+                          </div>
+                        }
+                      </td>
+                      <td>{{ booking.description }}</td>
+                      <td>{{ booking.date | date:'dd/MM/yyyy' }} • {{ booking.time }}</td>
+                      <td>
+                        <span class="badge" [class]="getStatusClass(booking.status)">
+                          {{ booking.status }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="table-actions">
+                          @switch (booking.status) {
+                            @case ('pending') {
+                              <div class="action-buttons-group">
+                                <button class="btn btn-success btn-sm"
+                                (click)="updateBookingStatus(booking.id, 'accepted')">Accept</button>
+                                <button class="btn btn-danger btn-sm" style="margin-left: 5px;"
+                                (click)="updateBookingStatus(booking.id, 'cancelled')">Reject</button>
+                              </div>
+                            }
+                            @case ('accepted') {
+                              <div
+                                style="display: flex; gap: 8px; align-items: center;">
+                                <button class="btn btn-primary btn-sm"
+                                (click)="updateBookingStatus(booking.id, 'in-progress')">Start</button>
+                                <button class="btn-icon" (click)="viewBookingDetails(booking)"
+                                  title="View Booking Details"><svg xmlns="http://www.w3.org/2000/svg"
+                                  width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                  stroke="#0099cc" stroke-width="2.5" stroke-linecap="round"
+                                  stroke-linejoin="round">
+                                  <path
+                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z">
+                                  </path>
+                                  <circle cx="12" cy="12" r="3"></circle>
+                                </svg></button>
+                              </div>
+                            }
+                            @case ('in-progress') {
+                              <div
+                                style="display: flex; gap: 8px; align-items: center;">
+                                <button class="btn btn-success btn-sm"
+                                (click)="updateBookingStatus(booking.id, 'completed')">Done</button>
+                                <button class="btn-icon" (click)="viewBookingDetails(booking)"
+                                  title="View Booking Details"><svg xmlns="http://www.w3.org/2000/svg"
+                                  width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                  stroke="#0099cc" stroke-width="2.5" stroke-linecap="round"
+                                  stroke-linejoin="round">
+                                  <path
+                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z">
+                                  </path>
+                                  <circle cx="12" cy="12" r="3"></circle>
+                                </svg></button>
+                              </div>
+                            }
+                            @case ('completed') {
+                              <div>
+                                <button class="btn-icon" (click)="viewBookingDetails(booking)"
+                                  title="View Booking Details"><svg xmlns="http://www.w3.org/2000/svg"
+                                  width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                  stroke="#0099cc" stroke-width="2.5" stroke-linecap="round"
+                                  stroke-linejoin="round">
+                                  <path
+                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z">
+                                  </path>
+                                  <circle cx="12" cy="12" r="3"></circle>
+                                </svg></button>
+                              </div>
+                            }
+                            @default {
+                              <span class="no-action">—</span>
+                            }
+                          }
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+            @if (!recentBookings || recentBookings.length === 0) {
+              <div class="empty-state">
+                <span class="icon">📅</span>
+                <p>No active bookings at the moment.</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Tab: Bookings -->
+    @if (activeTab === 'bookings' && !loading) {
+      <div class="tab-content fade-in">
+        <div class="card p-20">
+          <h3>All Job History</h3>
+          <div class="bookings-table-wrap mt-20">
+            <table class="bookings-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (b of allBookings; track b) {
+                  <tr>
+                    <td>#{{ b.id }}</td>
+                    <td class="booking-customer">
+                      <strong>{{ b.customerName }}</strong>
+                      @if (['accepted', 'in-progress', 'completed'].includes(b.status) && b.customerPhone) {
+                        <div
+                          style="margin-top: 4px;">
+                          <a [href]="'tel:' + b.customerPhone"
+                            style="color: var(--primary-orange); text-decoration: none; font-size: 0.85rem; font-weight: 700;">📞
+                          {{ b.customerPhone }}</a>
+                        </div>
+                      }
+                    </td>
+                    <td><span class="badge" [class]="getStatusClass(b.status)">{{ b.status }}</span></td>
+                    <td>{{ b.date }}</td>
+                    <td>
+                      @if (['accepted', 'in-progress', 'completed'].includes(b.status)) {
+                        <button
+                          class="btn-icon" title="View Booking" (click)="viewBookingDetails(b)"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                          viewBox="0 0 24 24" fill="none" stroke="#0099cc" stroke-width="2.5"
+                          stroke-linecap="round" stroke-linejoin="round">
+                          <path
+                            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z">
+                          </path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg></button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Placeholder Tabs -->
+    @if ((activeTab === 'earnings' || activeTab === 'profile' || activeTab === 'settings') && !loading) {
+      <div
+        class="tab-content fade-in">
+        <div class="empty-state">
+          <span class="icon">🚧</span>
+          <h3>Work in Progress</h3>
+          <p>The {{ activeTab }} module is being optimized for you. Stay tuned!</p>
+        </div>
+      </div>
+    }
+  </main>
+
+  <!-- Modals -->
+  @if (selectedBooking) {
+    <div class="modal-overlay" (click)="closeBookingDetails()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="closeBookingDetails()">×</button>
+        <div class="pd-header">
+          <div class="pd-titles">
+            <h3 style="font-size: 1.2rem; color: var(--dark-navy);">Booking #{{ selectedBooking.id }}</h3>
+            <p class="sub-text" style="font-size: 0.9rem;">Status: <span class="badge" style="margin-left: 5px;"
+            [class]="getStatusClass(selectedBooking.status)">{{ selectedBooking.status }}</span></p>
+          </div>
+        </div>
+        <div class="pd-grid mt-20">
+          <div class="pd-item">
+            <strong>Customer Name</strong>
+            <div>{{ selectedBooking.customerName }}</div>
+          </div>
+          <div class="pd-item">
+            <strong>Phone 📞</strong>
+            @if (['accepted', 'in-progress', 'completed'].includes(selectedBooking.status)) {
+              <div><a
+                [href]="'tel:' + selectedBooking.customerPhone"
+                style="color: var(--primary-orange); text-decoration: none; font-weight: 700;">{{
+              selectedBooking.customerPhone || 'N/A' }}</a></div>
+            }
+            @if (!['accepted', 'in-progress', 'completed'].includes(selectedBooking.status)) {
+              <div
+              style="color: var(--gray-400);">Available after acceptance</div>
+            }
+          </div>
+          <div class="pd-item">
+            <strong>Scheduled For</strong>
+            <div>{{ selectedBooking.date | date:'dd/MM/yyyy' }} at {{ selectedBooking.time }}</div>
+          </div>
+        </div>
+        <div class="pd-doc mt-20" style="background: rgba(243, 244, 246, 0.4); padding: 15px; border-radius: 8px;">
+          <h4 style="margin-top: 0;">Task Assignment Details</h4>
+          <p style="white-space: pre-wrap; margin: 0; color: var(--gray-600); font-size: 0.95rem;">{{
+          selectedBooking.description }}</p>
+        </div>
+        <div class="pd-doc mt-20"
+          style="background: rgba(245, 166, 35, 0.05); padding: 15px; border-radius: 8px; border-left: 3px solid var(--primary-orange);">
+          <h4 style="margin-top: 0; color: var(--dark-navy);">📍 Service Location</h4>
+          <p style="white-space: pre-wrap; margin: 0; color: var(--gray-600); font-size: 0.95rem;">{{
+          selectedBooking.address || 'Location strictly mapped. See description or call.' }}</p>
+        </div>
+        <div class="pd-actions mt-20" style="display: flex; justify-content: flex-end;">
+          <button class="btn btn-outline" (click)="closeBookingDetails()">Close Details</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

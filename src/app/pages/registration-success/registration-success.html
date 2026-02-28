@@ -1,0 +1,54 @@
+<div class="success-page">
+  <div class="success-card">
+    <!-- Success Icon -->
+    <div class="success-icon">
+      <div class="check-circle">✓</div>
+    </div>
+
+    <!-- Provider Success -->
+    @if (type === 'provider') {
+      <h1 class="success-title">Registration Submitted!</h1>
+      <p class="success-desc">
+        Your profile is under review. Our admin team will verify
+        your documents and approve within 24 hours. You'll
+        receive a notification once approved.
+      </p>
+      <div class="success-actions">
+        <a routerLink="/login" class="btn btn-outline">Go to Login</a>
+        <a routerLink="/" class="btn btn-primary">Back to Home</a>
+      </div>
+    }
+
+    <!-- Customer Success -->
+    @if (type === 'customer') {
+      <h1 class="success-title">Welcome to TrichyFix!</h1>
+      <p class="success-desc">
+        Your account has been created. Start browsing services
+        and book your first appointment.
+      </p>
+      <div class="success-actions">
+        <a routerLink="/login" class="btn btn-outline">Go to Login</a>
+        <a routerLink="/services" class="btn btn-primary">Browse Services</a>
+      </div>
+    }
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" [class.show]="showToast">
+    <span class="toast-icon">✅</span>
+    <div class="toast-content">
+      @if (type === 'customer') {
+        <strong>Account created successfully!</strong>
+      }
+      @if (type === 'provider') {
+        <strong>Registration submitted!</strong>
+      }
+      @if (type === 'customer') {
+        <span> Welcome to TrichyFix.</span>
+      }
+      @if (type === 'provider') {
+        <span> Your profile is under review.</span>
+      }
+    </div>
+  </div>
+</div>
