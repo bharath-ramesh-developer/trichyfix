@@ -47,14 +47,14 @@ export class Services implements OnInit {
 
   async fetchInitialData() {
     try {
-      const catRes = await fetch('http://localhost:3000/api/providers/categories');
+      const catRes = await fetch('https://trichyfix-backend-1-0.onrender.com/api/providers/categories');
       const catData = await catRes.json();
       if (catData.success) {
         this.categories = catData.categories;
         this.cdr.detectChanges();
       }
 
-      const areaRes = await fetch('http://localhost:3000/api/providers/areas');
+      const areaRes = await fetch('https://trichyfix-backend-1-0.onrender.com/api/providers/areas');
       const areaData = await areaRes.json();
       if (areaData.success) {
         this.areas = areaData.areas;
@@ -78,7 +78,7 @@ export class Services implements OnInit {
         sort: this.sortBy
       });
 
-      const res = await fetch(`http://localhost:3000/api/providers?${params.toString()}`);
+      const res = await fetch(`https://trichyfix-backend-1-0.onrender.com/api/providers?${params.toString()}`);
       const data = await res.json();
       if (data.success) {
         this.providers = data.providers;

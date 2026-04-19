@@ -75,6 +75,19 @@ exports.sendOTP = async (req, res) => {
             }
         }
 
+        if (purpose === 'register' && req.body.role) {
+            const { role } = req.body;
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('id, role')
+                .eq('phone', normalizedPhone)
+                .single();
+            
+            if (profile && profile.role === role) {
+                return res.status(400).json({ success: false, message: 'Phone number already exists for this role.' });
+            }
+        }
+
         // Clean phone number (remove non-digits). 2factor expects country code format e.g., 91xxxxxxxxx
         let cleanPhone = normalizedPhone.replace(/\D/g, '');
         if (cleanPhone.length === 10) {
@@ -159,27 +172,49 @@ exports.resetPassword = async (req, res) => {
     try {
         const { phone, otp, newPassword } = req.body;
         const normalizedPhone = normalizePhone(phone);
+        console.log(`[INFO] Reset password attempt for: ${normalizedPhone}`);
 
         const fallbackStored = otpStore.get(normalizedPhone);
         if (!fallbackStored || Date.now() > fallbackStored.expires || fallbackStored.otp !== otp || fallbackStored.purpose !== 'forgot_password') {
             return res.status(400).json({ success: false, message: 'Invalid or expired OTP token for password reset' });
         }
 
+        // 1. First find the profile to get the ID
+        const { data: profile, error: findErr } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('phone', normalizedPhone)
+            .single();
+
+        if (findErr || !profile) {
+            console.error('[ERROR] Reset password: profile not found for', normalizedPhone);
+            return res.status(404).json({ success: false, message: 'No account found with this phone number' });
+        }
+
+        // 2. Hash the new password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-        const { error } = await supabase
+        // 3. Update by ID and use .select() to verify the row actually changed
+        const { data: updated, error } = await supabase
             .from('profiles')
             .update({ password: hashedPassword })
-            .eq('phone', normalizedPhone);
+            .eq('id', profile.id)
+            .select('id')
+            .single();
 
         if (error) {
             console.error('[ERROR] Reset password update failed:', error.message);
             return res.status(500).json({ success: false, message: 'Failed to reset password' });
         }
 
+        if (!updated) {
+            console.error('[ERROR] Reset password: update returned no rows (possible RLS block)');
+            return res.status(500).json({ success: false, message: 'Password update was blocked. Please contact support.' });
+        }
+
         otpStore.delete(normalizedPhone);
-        console.log(`[SUCCESS] Password successfully reset for ${normalizedPhone}`);
+        console.log(`[SUCCESS] Password successfully reset for ${normalizedPhone} (profile: ${profile.id})`);
         return res.status(200).json({ success: true, message: 'Password reset successfully' });
     } catch (error) {
         console.error('[ERROR] Reset password error:', error.message);
@@ -377,20 +412,42 @@ exports.registerProvider = async (req, res) => {
             }
         }
 
-        // 1. Create Core Profile
-        const newProfile = {
-            id: newId,
-            first_name: fullName.split(' ')[0],
-            last_name: fullName.split(' ').slice(1).join(' '),
-            phone: normalizedPhone,
-            password: hashedPassword,
-            role: 'provider',
-            phone_verified: true,
-            profile_photo_url: profilePhotoUrl
-        };
+        // 1. Create Core Profile or use existing
+        let profileData;
+        const { data: existingProfile } = await supabase.from('profiles').select('*').eq('phone', normalizedPhone).single();
 
-        const { data: profileData, error: profileErr } = await supabase.from('profiles').insert(newProfile).select().single();
-        if (profileErr) throw profileErr;
+        if (existingProfile) {
+            if (existingProfile.role === 'provider') {
+                return res.status(400).json({ success: false, message: 'Phone number already registered as a provider' });
+            }
+            // User exists as customer, UPGRADE to provider
+            const { data, error: updateErr } = await supabase.from('profiles').update({
+                role: 'provider',
+                first_name: fullName.split(' ')[0],
+                last_name: fullName.split(' ').slice(1).join(' '),
+                password: hashedPassword,
+                profile_photo_url: profilePhotoUrl
+            }).eq('id', existingProfile.id).select().single();
+            
+            if (updateErr) throw updateErr;
+            profileData = data;
+        } else {
+            const newProfile = {
+                id: newId,
+                first_name: fullName.split(' ')[0],
+                last_name: fullName.split(' ').slice(1).join(' '),
+                phone: normalizedPhone,
+                password: hashedPassword,
+                role: 'provider',
+                phone_verified: true,
+                profile_photo_url: profilePhotoUrl
+            };
+            const { data, error: profileErr } = await supabase.from('profiles').insert(newProfile).select().single();
+            if (profileErr) throw profileErr;
+            profileData = data;
+        }
+
+        const currentProfileId = profileData.id;
 
         // 2. Create Marketplace Specifics
         let parsedCategories = [];
@@ -403,7 +460,7 @@ exports.registerProvider = async (req, res) => {
         }
 
         const newProvider = {
-            id: newId,
+            id: currentProfileId,
             business_name: fullName,
             category: parsedCategories && parsedCategories.length > 0 ? parsedCategories[0] : 'General',
             experience: Number(experience) || 0,

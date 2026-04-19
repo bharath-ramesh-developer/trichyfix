@@ -140,10 +140,24 @@
                 </div>
               </div>
             }
-            <button class="btn btn-primary btn-lg confirm-btn" (click)="submitBooking()"
-              [disabled]="bookingLoading">
-              {{ bookingLoading ? 'Processing...' : 'Confirm Booking →' }}
-            </button>
+            @if (auth.isLoggedIn()) {
+              @if (auth.isCustomer()) {
+                <button class="btn btn-primary btn-lg confirm-btn" (click)="submitBooking()"
+                  [disabled]="bookingLoading">
+                  {{ bookingLoading ? 'Processing...' : 'Confirm Booking →' }}
+                </button>
+              } @else {
+                <div class="role-warning">
+                  <span class="icon">⚠️</span>
+                  <p>You are logged in as a <strong>{{ auth.userRole() }}</strong>. Only customer accounts can book services.</p>
+                </div>
+              }
+            } @else {
+              <button class="btn btn-primary btn-lg confirm-btn" (click)="submitBooking()"
+                [disabled]="bookingLoading">
+                Login to Book →
+              </button>
+            }
             <p class="security-note">🔒 Secure booking powered by TrichyFix</p>
           </div>
         </div>

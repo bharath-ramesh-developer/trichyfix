@@ -9,10 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(compression());
-app.use(cors({
-    origin: ['http://localhost:4200', 'http://localhost:4300'],
-    credentials: true
-}));
+app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 

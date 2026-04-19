@@ -20,6 +20,12 @@ exports.createBooking = async (req, res) => {
         const { providerId, date, time, description, isEmergency, address } = req.body;
         console.log(`[INFO] New Booking Attempt: Customer ${req.user.id} -> Provider ${providerId}`);
 
+        // 0. Role Check (Extra Security)
+        if (req.user.role !== 'customer') {
+            console.log(`[WARNING] Booking Rejected: User ${req.user.id} is not a customer (${req.user.role})`);
+            return res.status(403).json({ success: false, message: 'Only customers are allowed to book services.' });
+        }
+
         // 1. Validation Hook
         if (!providerId || !date || !time || !description || !address) {
             console.log(`[WARNING] Booking Rejected: Missing required fields`);

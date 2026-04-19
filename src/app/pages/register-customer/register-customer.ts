@@ -2,13 +2,14 @@ import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-register-customer',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, CommonModule],
   templateUrl: './register-customer.html',
   styleUrl: './register-customer.css'
 })
@@ -32,9 +33,14 @@ export class RegisterCustomer implements OnInit {
   otpError = '';
   otpLoading = false;
 
+  // Snackbar UI Core
+  snackbarVisible = false;
+  snackbarMessage = '';
+  snackbarType: 'success' | 'error' | 'warning' = 'error';
+
   areas = ['KK Nagar', 'Srirangam', 'Thillai Nagar', 'Woraiyur', 'Cantonment', 'Puthur', 'Tennur', 'Crawford', 'Karumandapam'];
 
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'https://trichyfix-backend-1-0.onrender.com/api';
 
   allowOnlyNumbers(event: any) {
     const charCode = event.which ? event.which : event.keyCode;
@@ -63,6 +69,17 @@ export class RegisterCustomer implements OnInit {
     this.meta.updateTag({ name: 'description', content: 'Create a customer account to easily book home services across Trichy.' });
   }
 
+  showSnackbar(message: string, type: 'success' | 'error' | 'warning' = 'error') {
+    this.snackbarMessage = message;
+    this.snackbarType = type;
+    this.snackbarVisible = true;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.snackbarVisible = false;
+      this.cdr.detectChanges();
+    }, 4000);
+  }
+
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
@@ -76,7 +93,7 @@ export class RegisterCustomer implements OnInit {
     this.otpError = '';
     this.cdr.detectChanges();
 
-    const result = await this.auth.sendOTP(this.phone, 'register');
+    const result = await this.auth.sendOTP(this.phone, 'register', 'customer');
     this.otpLoading = false;
 
     if (result.success) {
@@ -87,6 +104,7 @@ export class RegisterCustomer implements OnInit {
       }
     } else {
       this.otpError = result.message;
+      this.showSnackbar(result.message, 'error');
     }
     this.cdr.detectChanges();
   }

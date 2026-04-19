@@ -2,13 +2,14 @@ import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -26,6 +27,11 @@ export class Login implements OnInit {
   otpSent = false;
   otpTimer = 0;
   otpInterval: any = null;
+
+  // Snackbar UI
+  snackbarVisible = false;
+  snackbarMessage = '';
+  snackbarType: 'success' | 'error' | 'warning' = 'error';
 
   allowOnlyNumbers(event: any) {
     const charCode = event.which ? event.which : event.keyCode;
@@ -66,6 +72,17 @@ export class Login implements OnInit {
     this.password = ''; // clear password buffer
     this.clearTimer();
     this.cdr.detectChanges();
+  }
+
+  showSnackbar(message: string, type: 'success' | 'error' | 'warning' = 'error') {
+    this.snackbarMessage = message;
+    this.snackbarType = type;
+    this.snackbarVisible = true;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.snackbarVisible = false;
+      this.cdr.detectChanges();
+    }, 4000);
   }
 
   async onLogin() {
@@ -111,12 +128,14 @@ export class Login implements OnInit {
     if (result.success) {
       this.otpSent = true;
       this.successMsg = 'OTP sent to ' + this.phone;
+      this.showSnackbar('OTP sent successfully', 'success');
       this.startTimer();
       if (result.devOTP) {
         this.otp = result.devOTP;
       }
     } else {
       this.errorMsg = result.message;
+      this.showSnackbar(result.message, 'error');
     }
     this.cdr.detectChanges();
   }
@@ -139,11 +158,13 @@ export class Login implements OnInit {
 
     if (result.success) {
       this.successMsg = 'Password reset successful!';
+      this.showSnackbar('Password reset successful!', 'success');
       setTimeout(() => {
         this.switchMode('password');
       }, 1500);
     } else {
       this.errorMsg = result.message;
+      this.showSnackbar(result.message, 'error');
     }
     this.cdr.detectChanges();
   }

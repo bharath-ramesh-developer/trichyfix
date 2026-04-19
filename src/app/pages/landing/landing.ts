@@ -62,7 +62,8 @@ export class Landing implements OnInit, AfterViewInit {
     { name: 'AC Repair', tamil: 'ஏசி பழுது', color: '#00bfa5', desc: 'AC service, gas refill, installation', category: 'AC Repair', jobs: '3.1K+ jobs done' },
     { name: 'Appliance Repair', tamil: 'சாதனங்கள்', color: '#8B5CF6', desc: 'Washing machine, fridge, geyser repair', category: 'Appliance', jobs: '1.2K+ jobs done' },
     { name: 'Painting', tamil: 'பெயிண்டிங்', color: '#EC4899', desc: 'Interior, exterior, waterproofing', category: 'Painting', jobs: '800+ jobs done' },
-    { name: 'Carpentry', tamil: 'மரவேலை', color: '#D97706', desc: 'Furniture repair, modular kitchen, doors', category: 'Carpentry', jobs: '650+ jobs done' }
+    { name: 'Carpentry', tamil: 'மரவேலை', color: '#D97706', desc: 'Furniture repair, modular kitchen, doors', category: 'Carpentry', jobs: '650+ jobs done' },
+    { name: 'Acting Driver', tamil: 'தற்காலிக ஓட்டுநர்', color: '#1E2937', desc: 'Professional local drivers for your luxury or daily cars', category: 'Acting Driver', jobs: '450+ jobs done' }
   ];
 
   steps = [

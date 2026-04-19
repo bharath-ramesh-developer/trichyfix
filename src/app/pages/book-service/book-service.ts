@@ -36,7 +36,7 @@ export class BookService implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private auth: AuthService,
+    public auth: AuthService,
     private title: Title,
     private meta: Meta,
     private cdr: ChangeDetectorRef
@@ -61,7 +61,7 @@ export class BookService implements OnInit {
     this.cdr.detectChanges();
 
     try {
-      const res = await fetch(`http://localhost:3000/api/providers/${this.providerId}`);
+      const res = await fetch(`https://trichyfix-backend-1-0.onrender.com/api/providers/${this.providerId}`);
       const data = await res.json();
       if (data.success) {
         this.provider = data.provider;
@@ -98,6 +98,11 @@ export class BookService implements OnInit {
       return;
     }
 
+    if (!this.auth.isCustomer()) {
+      alert('Only customers can book services. Please login with a customer account.');
+      return;
+    }
+
     this.bookingLoading = true;
     this.cdr.detectChanges();
 
@@ -111,7 +116,7 @@ export class BookService implements OnInit {
         isEmergency: this.isEmergency
       };
 
-      const res = await this.auth.authFetch('http://localhost:3000/api/bookings', {
+      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/bookings', {
         method: 'POST',
         body: JSON.stringify(payload)
       });

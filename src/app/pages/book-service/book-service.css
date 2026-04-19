@@ -446,3 +446,29 @@
         font-size: 0.78rem;
     }
 }
+
+.role-warning {
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 16px 0;
+}
+
+.role-warning .icon {
+    font-size: 1.2rem;
+}
+
+.role-warning p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #92400e;
+    line-height: 1.5;
+}
+
+.role-warning strong {
+    text-transform: capitalize;
+}

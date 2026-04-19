@@ -96,7 +96,7 @@ export class ProviderDashboard implements OnInit, OnDestroy {
     this.startLoading();
     this.error = '';
     try {
-      const res = await this.auth.authFetch('http://localhost:3000/api/providers/dashboard');
+      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/providers/dashboard');
       if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
       const data = await res.json();
       this.zone.run(() => {
@@ -127,7 +127,7 @@ export class ProviderDashboard implements OnInit, OnDestroy {
     this.startLoading();
     this.error = '';
     try {
-      const res = await this.auth.authFetch('http://localhost:3000/api/bookings/provider');
+      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/bookings/provider');
       if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
       const data = await res.json();
       this.zone.run(() => {
@@ -161,7 +161,7 @@ export class ProviderDashboard implements OnInit, OnDestroy {
     if (!confirm(`Are you sure you want to ${message} this booking?`)) return;
 
     try {
-      const res = await this.auth.authFetch(`http://localhost:3000/api/bookings/${id}/status`, {
+      const res = await this.auth.authFetch(`https://trichyfix-backend-1-0.onrender.com/api/bookings/${id}/status`, {
         method: 'PATCH',
         body: JSON.stringify({ status })
       });

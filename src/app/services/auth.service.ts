@@ -23,7 +23,7 @@ export interface LoginResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     /** The base URL endpoint for all backend authentication API calls */
-    private readonly API_URL = 'http://localhost:3000/api';
+    private readonly API_URL = 'https://trichyfix-backend-1-0.onrender.com/api';
     /** LocalStorage key used to store the active JWT authentication string */
     private readonly TOKEN_KEY = 'trichyfix_token';
     /** LocalStorage key used to store the secondary Refresh JWT Token string */
@@ -143,12 +143,12 @@ export class AuthService {
     }
 
     // ── Send OTP ────────────────────────────────────────────────
-    async sendOTP(phone: string, purpose: 'login' | 'register' | 'forgot_password'): Promise<{ success: boolean; message: string; devOTP?: string }> {
+    async sendOTP(phone: string, purpose: 'login' | 'register' | 'forgot_password', role?: string): Promise<{ success: boolean; message: string; devOTP?: string }> {
         try {
             const res = await fetch(`${this.API_URL}/auth/send-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, purpose })
+                body: JSON.stringify({ phone, purpose, role })
             });
             return await res.json();
         } catch {

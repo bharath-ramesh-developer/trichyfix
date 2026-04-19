@@ -9,7 +9,7 @@
 
       <h1 class="left-title">Join Trichy's #1<br>Home Services Platform</h1>
       <p class="left-desc">Find verified electricians, plumbers, and more in your neighbourhood. 10K+ happy
-      customers.</p>
+        customers.</p>
 
       <ul class="left-features">
         <li>✅ Verified professionals only</li>
@@ -33,96 +33,106 @@
             <label class="form-label">FIRST NAME</label>
             <input type="text" class="form-input" placeholder="Enter first name" [(ngModel)]="firstName"
               name="firstName">
-            </div>
-            <div class="form-group">
-              <label class="form-label">LAST NAME</label>
-              <input type="text" class="form-input" placeholder="Enter last name" [(ngModel)]="lastName"
-                name="lastName">
-              </div>
-            </div>
-
-
-
-            <!-- Phone + OTP -->
-            <div class="form-group">
-              <label class="form-label">Phone Number</label>
-              <div class="phone-otp-row">
-                <div class="form-input-icon phone-input-wrap has-prefix">
-                  <span class="icon-left">📱</span>
-                  <span class="prefix-text">+91</span>
-                  <input type="tel" class="form-input" placeholder="xxxxx xxxxx" [(ngModel)]="phone"
-                    name="phone" [readonly]="otpVerified" maxlength="10"
-                    (keypress)="allowOnlyNumbers($event)" (paste)="onPaste($event)">
-                  </div>
-                  @if (!otpVerified) {
-                    <button type="button" class="btn btn-otp"
-                      [disabled]="otpLoading || (otpSent && otpTimer > 0)" (click)="sendOTP()">
-                      {{ otpLoading ? 'Sending...' : otpSent ? (otpTimer > 0 ? otpTimer + 's' : 'Resend') : 'Send
-                      OTP' }}
-                    </button>
-                  }
-                  @if (otpVerified) {
-                    <span class="verified-badge">✅ Verified</span>
-                  }
-                </div>
-              </div>
-
-              <!-- OTP Input (shown after OTP sent, before verified) -->
-              @if (otpSent && !otpVerified) {
-                <div class="form-group otp-group">
-                  <label class="form-label">Enter OTP</label>
-                  <div class="otp-verify-row">
-                    <input type="text" class="form-input otp-input" placeholder="Enter 4-digit OTP"
-                      [(ngModel)]="otpCode" name="otpCode" maxlength="4" (keypress)="allowOnlyNumbers($event)"
-                      (paste)="onPaste($event)">
-                      <button type="button" class="btn btn-primary btn-verify" (click)="verifyOTP()"
-                        [disabled]="otpLoading">
-                        {{ otpLoading ? 'Verifying...' : 'Verify' }}
-                      </button>
-                    </div>
-                    @if (otpError) {
-                      <span class="otp-error">{{ otpError }}</span>
-                    }
-                    <span class="otp-hint">SMS Verification sent to {{ phone }}. Please check your phone inbox.</span>
-                  </div>
-                }
-
-                <!-- Password -->
-                <div class="form-group">
-                  <label class="form-label">Password</label>
-                  <div class="form-input-icon">
-                    <span class="icon-left">🔒</span>
-                    <input [type]="showPassword ? 'text' : 'password'" class="form-input"
-                      placeholder="Create a password" [(ngModel)]="password" name="password">
-                      <span class="icon-right" (click)="togglePassword()">{{ showPassword ? '🙈' : '👁' }}</span>
-                    </div>
-                  </div>
-
-                  <!-- Area -->
-                  <div class="form-group">
-                    <label class="form-label">Area in Trichy</label>
-                    <div class="form-input-icon">
-                      <span class="icon-left">📍</span>
-                      <select class="form-input form-select-styled" [(ngModel)]="area" name="area">
-                        <option value="">Select your area</option>
-                        @for (a of areas; track a) {
-                          <option [value]="a">{{ a }}</option>
-                        }
-                      </select>
-                    </div>
-                  </div>
-
-                  <!-- Terms -->
-                  <label class="terms-check">
-                    <input type="checkbox" [(ngModel)]="agreeTerms" name="agreeTerms">
-                    <span>I agree to TrichyFix's <a href="#">Terms of Service</a> and <a href="#">Privacy
-                  Policy</a></span>
-                </label>
-
-                <button type="submit" class="btn btn-primary btn-lg reg-btn">Create Account →</button>
-              </form>
-
-              <p class="login-link">Already have an account? <a routerLink="/login">Login</a></p>
-            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">LAST NAME</label>
+            <input type="text" class="form-input" placeholder="Enter last name" [(ngModel)]="lastName" name="lastName">
           </div>
         </div>
+
+
+
+        <!-- Phone + OTP -->
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <div class="phone-otp-row">
+            <div class="form-input-icon phone-input-wrap has-prefix">
+              <span class="icon-left">📱</span>
+              <span class="prefix-text">+91</span>
+              <input type="tel" class="form-input" placeholder="xxxxx xxxxx" [(ngModel)]="phone" name="phone"
+                [readonly]="otpVerified" maxlength="10" (keypress)="allowOnlyNumbers($event)" (paste)="onPaste($event)">
+            </div>
+            @if (!otpVerified) {
+            <button type="button" class="btn btn-otp" [disabled]="otpLoading || (otpSent && otpTimer > 0)"
+              (click)="sendOTP()">
+              {{ otpLoading ? 'Sending...' : otpSent ? (otpTimer > 0 ? otpTimer + 's' : 'Resend') : 'Send
+              OTP' }}
+            </button>
+            }
+            @if (otpVerified) {
+            <span class="verified-badge">✅ Verified</span>
+            }
+          </div>
+        </div>
+
+        <!-- OTP Input (shown after OTP sent, before verified) -->
+        @if (otpSent && !otpVerified) {
+        <div class="form-group otp-group">
+          <label class="form-label">Enter OTP</label>
+          <div class="otp-verify-row">
+            <input type="text" class="form-input otp-input" placeholder="Enter 4-digit OTP" [(ngModel)]="otpCode"
+              name="otpCode" maxlength="4" (keypress)="allowOnlyNumbers($event)" (paste)="onPaste($event)">
+            <button type="button" class="btn btn-primary btn-verify" (click)="verifyOTP()" [disabled]="otpLoading">
+              {{ otpLoading ? 'Verifying...' : 'Verify' }}
+            </button>
+          </div>
+          @if (otpError) {
+          <span class="otp-error">{{ otpError }}</span>
+          }
+          <span class="otp-hint">SMS Verification sent to {{ phone }}. Please check your phone inbox.</span>
+        </div>
+        }
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="form-input-icon">
+            <span class="icon-left">🔒</span>
+            <input [type]="showPassword ? 'text' : 'password'" class="form-input" placeholder="Create a password"
+              [(ngModel)]="password" name="password">
+            <span class="icon-right" (click)="togglePassword()">{{ showPassword ? '🙈' : '👁' }}</span>
+          </div>
+        </div>
+
+        <!-- Area -->
+        <div class="form-group">
+          <label class="form-label">Area in Trichy</label>
+          <div class="form-input-icon">
+            <span class="icon-left">📍</span>
+            <select class="form-input form-select-styled" [(ngModel)]="area" name="area">
+              <option value="">Select your area</option>
+              @for (a of areas; track a) {
+              <option [value]="a">{{ a }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <label class="terms-check">
+          <input type="checkbox" [(ngModel)]="agreeTerms" name="agreeTerms">
+          <span>I agree to TrichyFix's <a>Terms of Service</a> and <a>Privacy
+              Policy</a></span>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-lg reg-btn">Create Account →</button>
+      </form>
+
+      <p class="login-link">Already have an account? <a routerLink="/login">Login</a></p>
+    </div>
+
+    <!-- Live Action Snackbar Component -->
+    <div class="snackbar" [class.show]="snackbarVisible" [ngClass]="snackbarType">
+      @if (snackbarType === 'success') {
+        <span class="sb-icon">✅</span>
+      }
+      @if (snackbarType === 'warning') {
+        <span class="sb-icon">⚠️</span>
+      }
+      @if (snackbarType === 'error') {
+        <span class="sb-icon">❌</span>
+      }
+      <span class="sb-text">{{ snackbarMessage }}</span>
+    </div>
+  </div>
+</div>

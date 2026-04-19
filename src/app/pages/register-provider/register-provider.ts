@@ -39,7 +39,7 @@ export class RegisterProvider implements OnInit, OnDestroy {
   priceMax = '';
   emergencyAvailable = false;
 
-  categories = ['Electrician', 'Plumber', 'AC Repair', 'Appliance Repair', 'Painting', 'Carpentry'];
+  categories = ['Electrician', 'Plumber', 'AC Repair', 'Appliance', 'Painting', 'Carpentry', 'Acting Driver'];
   areas = ['KK Nagar', 'Srirangam', 'Thillai Nagar', 'Woraiyur', 'Cantonment', 'Puthur', 'Tennur', 'Crawford', 'Karumandapam'];
 
   // Step 3: Verification & ID Proof
@@ -59,7 +59,7 @@ export class RegisterProvider implements OnInit, OnDestroy {
   snackbarMessage = '';
   snackbarType: 'success' | 'error' | 'warning' = 'error';
 
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'https://trichyfix-backend-1-0.onrender.com/api';
 
   allowOnlyNumbers(event: any) {
     const charCode = event.which ? event.which : event.keyCode;
@@ -156,7 +156,7 @@ export class RegisterProvider implements OnInit, OnDestroy {
     this.otpError = '';
     this.cdr.detectChanges();
 
-    const result = await this.auth.sendOTP(this.phone, 'register');
+    const result = await this.auth.sendOTP(this.phone, 'register', 'provider');
     this.otpLoading = false;
 
     if (result.success) {
@@ -165,6 +165,7 @@ export class RegisterProvider implements OnInit, OnDestroy {
       if (result.devOTP) this.otpCode = result.devOTP;
     } else {
       this.otpError = result.message;
+      this.showSnackbar(result.message, 'error');
     }
     this.cdr.detectChanges();
   }

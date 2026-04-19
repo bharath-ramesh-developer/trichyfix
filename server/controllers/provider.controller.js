@@ -16,8 +16,8 @@ exports.getProviders = async (req, res) => {
         console.log(`[INFO] Fetching providers list. Query:`, req.query);
         const { category, area, emergency, search, sort } = req.query;
 
-        // Start Supabase query - only active providers
         let query = supabase.from('providers').select('*, profiles!id(first_name, last_name, profile_photo_url)').eq('status', 'active');
+        console.log(`[DEBUG] Query defined for status: active`);
 
         // Apply filters
         if (category && category !== 'All Services') {
@@ -33,6 +33,15 @@ exports.getProviders = async (req, res) => {
 
         const { data: providers, error } = await query;
         if (error) throw error;
+        
+        const allStats = await supabase.from('providers').select('status');
+        const stats = [...new Set(allStats.data?.map(s => s.status))];
+        console.log(`[DEBUG] All unique statuses in DB: ${stats.join(', ')}`);
+        
+        console.log(`[DEBUG] Fetched ${providers?.length} providers from DB`);
+        if (providers?.length > 0) {
+            console.log(`[DEBUG] Sample category: ${providers[0].category}`);
+        }
 
         let filtered = providers;
 
@@ -188,7 +197,8 @@ exports.getCategories = async (req, res) => {
             { name: 'AC Repair', icon: 'snowflake' },
             { name: 'Appliance', icon: 'plug' },
             { name: 'Painting', icon: 'palette' },
-            { name: 'Carpentry', icon: 'hammer' }
+            { name: 'Carpentry', icon: 'hammer' },
+            { name: 'Acting Driver', icon: 'navigation' }
         ]
     });
 };

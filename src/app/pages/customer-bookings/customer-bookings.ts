@@ -38,7 +38,7 @@ export class CustomerBookings implements OnInit {
         this.cdr.detectChanges();
 
         try {
-            const res = await this.auth.authFetch('http://localhost:3000/api/bookings/customer');
+            const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/bookings/customer');
             const data = await res.json();
 
             if (data.success) {
@@ -77,7 +77,7 @@ export class CustomerBookings implements OnInit {
 
     async submitRating(bookingId: string, ratingNum: number) {
         try {
-            const res = await this.auth.authFetch(`http://localhost:3000/api/bookings/${bookingId}/rate`, {
+            const res = await this.auth.authFetch(`https://trichyfix-backend-1-0.onrender.com/api/bookings/${bookingId}/rate`, {
                 method: 'POST',
                 body: JSON.stringify({ rating: ratingNum, review: '' })
             });
