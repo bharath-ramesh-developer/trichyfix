@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-book-service',
@@ -61,7 +62,7 @@ export class BookService implements OnInit {
     this.cdr.detectChanges();
 
     try {
-      const res = await fetch(`https://trichyfix-backend-1-0.onrender.com/api/providers/${this.providerId}`);
+      const res = await fetch(`${environment.apiUrl}/providers/${this.providerId}`);
       const data = await res.json();
       if (data.success) {
         this.provider = data.provider;
@@ -116,7 +117,7 @@ export class BookService implements OnInit {
         isEmergency: this.isEmergency
       };
 
-      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/bookings', {
+      const res = await this.auth.authFetch(`${environment.apiUrl}/bookings`, {
         method: 'POST',
         body: JSON.stringify(payload)
       });

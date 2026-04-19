@@ -4,6 +4,7 @@ import { CommonModule, SlicePipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-provider-dashboard',
@@ -96,7 +97,7 @@ export class ProviderDashboard implements OnInit, OnDestroy {
     this.startLoading();
     this.error = '';
     try {
-      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/providers/dashboard');
+      const res = await this.auth.authFetch(`${environment.apiUrl}/providers/dashboard`);
       if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
       const data = await res.json();
       this.zone.run(() => {
@@ -127,7 +128,7 @@ export class ProviderDashboard implements OnInit, OnDestroy {
     this.startLoading();
     this.error = '';
     try {
-      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/bookings/provider');
+      const res = await this.auth.authFetch(`${environment.apiUrl}/bookings/provider`);
       if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
       const data = await res.json();
       this.zone.run(() => {
@@ -161,7 +162,7 @@ export class ProviderDashboard implements OnInit, OnDestroy {
     if (!confirm(`Are you sure you want to ${message} this booking?`)) return;
 
     try {
-      const res = await this.auth.authFetch(`https://trichyfix-backend-1-0.onrender.com/api/bookings/${id}/status`, {
+      const res = await this.auth.authFetch(`${environment.apiUrl}/bookings/${id}/status`, {
         method: 'PATCH',
         body: JSON.stringify({ status })
       });

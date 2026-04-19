@@ -4,6 +4,7 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin',
@@ -123,7 +124,7 @@ export class Admin implements OnInit, OnDestroy {
     this.startLoading();
     this.error = '';
     try {
-      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/admin/stats');
+      const res = await this.auth.authFetch(`${environment.apiUrl}/admin/stats`);
       if (!res.ok) throw new Error(`Status ${res.status}`);
       const data = await res.json();
       this.zone.run(() => {
@@ -178,7 +179,7 @@ export class Admin implements OnInit, OnDestroy {
   async fetchAllProviders() {
     this.startLoading();
     try {
-      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/admin/providers');
+      const res = await this.auth.authFetch(`${environment.apiUrl}/admin/providers`);
       if (!res.ok) throw new Error('Providers not available');
       const data = await res.json();
       if (data.success) {
@@ -187,7 +188,7 @@ export class Admin implements OnInit, OnDestroy {
         });
         // Force refresh pending providers every time if we are actively viewing the verification tab
         if (this.activeTab === 'verification' || this.activeTab === 'dashboard') {
-          const sRes = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/admin/stats');
+          const sRes = await this.auth.authFetch(`${environment.apiUrl}/admin/stats`);
           const sData = await sRes.json();
           this.zone.run(() => {
             if (sData.success) this.pendingProviders = sData.pendingProviders || [];
@@ -206,7 +207,7 @@ export class Admin implements OnInit, OnDestroy {
   async fetchAllBookings() {
     this.startLoading();
     try {
-      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/admin/bookings');
+      const res = await this.auth.authFetch(`${environment.apiUrl}/admin/bookings`);
       if (!res.ok) throw new Error('Booking service error');
       const data = await res.json();
       this.zone.run(() => {
@@ -226,7 +227,7 @@ export class Admin implements OnInit, OnDestroy {
   async fetchAllUsers() {
     this.startLoading();
     try {
-      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/admin/users');
+      const res = await this.auth.authFetch(`${environment.apiUrl}/admin/users`);
       if (!res.ok) throw new Error('User service error');
       const data = await res.json();
       this.zone.run(() => {
@@ -248,7 +249,7 @@ export class Admin implements OnInit, OnDestroy {
     if (!confirm(`Are you sure you want to ${action} this provider?`)) return;
 
     try {
-      const res = await this.auth.authFetch(`https://trichyfix-backend-1-0.onrender.com/api/admin/providers/${id}/status`, {
+      const res = await this.auth.authFetch(`${environment.apiUrl}/admin/providers/${id}/status`, {
         method: 'PATCH',
         body: JSON.stringify({ status })
       });

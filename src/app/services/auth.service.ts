@@ -1,5 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 export interface User {
     id: string;
@@ -23,7 +24,7 @@ export interface LoginResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     /** The base URL endpoint for all backend authentication API calls */
-    private readonly API_URL = 'https://trichyfix-backend-1-0.onrender.com/api';
+    private readonly API_URL = environment.apiUrl;
     /** LocalStorage key used to store the active JWT authentication string */
     private readonly TOKEN_KEY = 'trichyfix_token';
     /** LocalStorage key used to store the secondary Refresh JWT Token string */

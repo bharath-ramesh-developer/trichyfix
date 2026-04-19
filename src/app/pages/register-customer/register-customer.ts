@@ -1,10 +1,10 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Title, Meta } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-register-customer',
@@ -40,7 +40,7 @@ export class RegisterCustomer implements OnInit {
 
   areas = ['KK Nagar', 'Srirangam', 'Thillai Nagar', 'Woraiyur', 'Cantonment', 'Puthur', 'Tennur', 'Crawford', 'Karumandapam'];
 
-  private apiUrl = 'https://trichyfix-backend-1-0.onrender.com/api';
+  private apiUrl = environment.apiUrl;
 
   allowOnlyNumbers(event: any) {
     const charCode = event.which ? event.which : event.keyCode;

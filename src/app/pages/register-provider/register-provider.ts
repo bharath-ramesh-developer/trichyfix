@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Title, Meta } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-register-provider',
@@ -59,7 +60,7 @@ export class RegisterProvider implements OnInit, OnDestroy {
   snackbarMessage = '';
   snackbarType: 'success' | 'error' | 'warning' = 'error';
 
-  private apiUrl = 'https://trichyfix-backend-1-0.onrender.com/api';
+  private apiUrl = environment.apiUrl;
 
   allowOnlyNumbers(event: any) {
     const charCode = event.which ? event.which : event.keyCode;

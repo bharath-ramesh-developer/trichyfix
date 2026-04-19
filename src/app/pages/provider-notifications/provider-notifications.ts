@@ -1,7 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 interface Notification {
   id: number;
@@ -32,7 +32,7 @@ export class ProviderNotifications implements OnInit {
 
   async fetchLiveBookings() {
     try {
-      const res = await this.auth.authFetch('https://trichyfix-backend-1-0.onrender.com/api/bookings/provider');
+      const res = await this.auth.authFetch(`${environment.apiUrl}/bookings/provider`);
       if (!res.ok) return;
       const data = await res.json();
 
@@ -102,7 +102,7 @@ export class ProviderNotifications implements OnInit {
     if (!n || !n.bookingId) return;
 
     try {
-      const res = await this.auth.authFetch(`https://trichyfix-backend-1-0.onrender.com/api/bookings/${n.bookingId}/status`, {
+      const res = await this.auth.authFetch(`${environment.apiUrl}/bookings/${n.bookingId}/status`, {
         method: 'PATCH',
         body: JSON.stringify({ status: 'accepted' })
       });
@@ -126,7 +126,7 @@ export class ProviderNotifications implements OnInit {
     if (!n || !n.bookingId) return;
 
     try {
-      const res = await this.auth.authFetch(`https://trichyfix-backend-1-0.onrender.com/api/bookings/${n.bookingId}/status`, {
+      const res = await this.auth.authFetch(`${environment.apiUrl}/bookings/${n.bookingId}/status`, {
         method: 'PATCH',
         body: JSON.stringify({ status: 'cancelled' })
       });
